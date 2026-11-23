@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="referrer" content="no-referrer">
 <meta name="color-scheme" content="light dark">
-<title>Übungsseite Herr Zell</title>
+<title>Lernkiste</title>
 <style>
 /* Stil wie die Schulapp: ruhig, Flächen statt Linien, Systemschrift, Lucide-Linien-Icons.
    Abstände 4/8/12/16/24/32 · Radius 14 Kacheln, 12 Antworten, 10 Icon-Felder · Akzent je Klasse/Fach */
@@ -670,7 +670,7 @@ function ring(frac,size){const r=16,c=2*Math.PI*r;return `<svg class="ring" widt
    Jede Karte hat eine 4-stellige Nummer. Sie entsteht auf dem Gerät des Kindes und enthält nichts über das Kind.
    Herr Zell gibt sie im Lehrerbereich ein und sieht, ob sie schon einmal eingelöst wurde.
    LEHRER_PIN vor dem Hochladen ändern. */
-const 79104="zell-uebung-2026";
+const SECRET="79104";
 const LEHRER_PIN="1509";
 const fnv=s=>{let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x};
 if(!st.salt){st.salt=Math.random().toString(36).slice(2,10);save()}
@@ -722,8 +722,8 @@ function vAlbum(){setBar("start","Start");enter(1);app.style.setProperty("--a","
  ${blocks.length?blocks.join(""):`<div class="tile sub" style="margin-top:16px">Hier sammeln sich deine Auszeichnungen. Fang einfach mit einem Kapitel an!</div>`}`;
  app.querySelectorAll("[data-card]").forEach(b=>b.onclick=()=>cardModal(b.dataset.card))}
 
-function vHome(){setBar(null,"Übungsseite");enter(0);app.style.removeProperty("--a");const s=streak();const L=st.last?findC(st.last):null;
- app.innerHTML=`<p class="eyebrow" style="color:var(--ink-2)">Herr Zell</p><h1>Üben</h1><p class="sub">Wähle deine Klasse und übe, was ihr gerade im Unterricht macht.</p>
+function vHome(){setBar(null,"Lernkiste");enter(0);app.style.removeProperty("--a");const s=streak();const L=st.last?findC(st.last):null;
+ app.innerHTML=`<p class="eyebrow" style="color:var(--ink-2)">Herr Zell</p><h1>Lernkiste</h1><p class="sub">Wähle deine Klasse und übe, was ihr gerade im Unterricht macht.</p>
  <div class="tile note st" style="margin-top:16px">${ic("shield")}<div><p style="font-weight:600">Es wird nichts über dich gespeichert oder verschickt. Dein Fortschritt bleibt nur auf diesem Gerät.</p><button class="btn sec" id="del" style="margin-top:12px">${ic("trash")}Fortschritt auf diesem Gerät löschen</button></div></div>
  ${L||s?`<div class="stack" style="margin-top:8px">
  ${L?`<a class="wide tinted st" style="--a:${L.F.color};--i:1" href="#c-${L.id}"><span class="ibox">${ic("play")}</span><span class="grow"><span class="t" style="display:block">Weiter, wo du warst</span><span class="s">${esc(L.K.name)} · ${esc(chapLabel(L))}: ${esc(L.titel)}</span></span>${ic("next","chev")}</a>`:""}
