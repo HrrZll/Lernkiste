@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light dark">
+<title>Übungsseite Herr Zell</title>
+<style>
+/* Stil wie die Schulapp: ruhig, Flächen statt Linien, Systemschrift, Lucide-Linien-Icons.
+   Abstände 4/8/12/16/24/32 · Radius 14 Kacheln, 12 Antworten, 10 Icon-Felder · Akzent je Klasse/Fach */
+:root{--bg:#fff;--surface:#fff;--flaeche:#f5f5f3;--flaeche-hover:#efefec;--surface-2:#f1f1ef;--ink:#37352f;--ink-2:#6b6a66;--ink-3:#8a8984;--good:#1f8a53;--warn:#b06a06;--bad:#c0392f;
+ --primary:#37352f;--on-primary:#fff;--seg-shadow:0 1px 2px rgba(0,0,0,.08);--a:#3f5bd9;--A:var(--a);
+ --ease:cubic-bezier(.22,1,.36,1);--spring:cubic-bezier(.34,1.56,.64,1);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121212;--surface:#121212;--flaeche:#1e1e1e;--flaeche-hover:#252525;--surface-2:#262626;--ink:#ebebea;--ink-2:#b8b7b3;--ink-3:#a09f9a;--good:#5cc28d;--warn:#e0a24a;--bad:#ec7a70;--primary:#ebebea;--on-primary:#191919;--seg-shadow:none;--A:color-mix(in srgb,var(--a) 55%,#fff);color-scheme:dark}}
+:root[data-theme=dark]{--bg:#121212;--surface:#121212;--flaeche:#1e1e1e;--flaeche-hover:#252525;--surface-2:#262626;--ink:#ebebea;--ink-2:#b8b7b3;--ink-3:#a09f9a;--good:#5cc28d;--warn:#e0a24a;--bad:#ec7a70;--primary:#ebebea;--on-primary:#191919;--seg-shadow:none;--A:color-mix(in srgb,var(--a) 55%,#fff);color-scheme:dark}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"SF Pro Text",system-ui,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:clip}
+*[style*="--a"],.acc{--A:var(--a)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) *[style*="--a"],:root:not([data-theme=light]) .acc{--A:color-mix(in srgb,var(--a) 55%,#fff)}}
+:root[data-theme=dark] *[style*="--a"],:root[data-theme=dark] .acc{--A:color-mix(in srgb,var(--a) 55%,#fff)}
+button,select,textarea,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0;text-align:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--A);outline-offset:2px;border-radius:10px}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Kopfleiste */
+.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:env(safe-area-inset-top) max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left))}
+.bar-in{max-width:1100px;margin:0 auto;height:52px;display:flex;align-items:center;gap:8px}
+.bar.narrow .bar-in{max-width:760px}
+.back{display:inline-flex;align-items:center;gap:4px;min-height:44px;padding:0 12px 0 4px;margin-left:-4px;border-radius:10px;font-weight:600;font-size:15px;color:var(--ink)}
+.back:hover{background:var(--flaeche)}
+.brand{font-weight:650;font-size:15px;color:var(--ink-2)}
+
+/* Seite */
+.wrap{max-width:1100px;margin:0 auto;padding:8px max(20px,env(safe-area-inset-right)) 32px max(20px,env(safe-area-inset-left))}
+.wrap.narrow{max-width:760px}
+.eyebrow{font-size:13px;font-weight:650;color:var(--A);margin:8px 0 4px}
+h1{font-size:27px;line-height:1.2;font-weight:700;letter-spacing:-.025em;margin:0 0 8px;text-wrap:balance}
+h2{font-size:20px;line-height:1.3;font-weight:700;letter-spacing:-.015em;margin:0}
+.h-sec{font-size:13px;font-weight:650;color:var(--ink-2);margin:24px 0 8px}
+p{margin:0}
+.sub{color:var(--ink-2);font-size:15px}
+.small{font-size:13px;color:var(--ink-2)}
+.stack{display:grid;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grow{flex:1}
+
+/* Kacheln */
+.tile{background:var(--flaeche);border-radius:14px;padding:16px}
+.tint{background:color-mix(in srgb,var(--A) 9%,var(--flaeche))}
+.grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:700px){.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}}
+.tcard{position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:12px;min-height:110px;padding:14px;border-radius:14px;background:color-mix(in srgb,var(--A) 9%,var(--flaeche));transition:transform .15s var(--ease),background .15s}
+.tcard:hover{background:color-mix(in srgb,var(--A) 13%,var(--flaeche))}
+.ibox{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--A) 16%,var(--flaeche));color:var(--A);flex:none}
+.tcard .t{font-size:15px;font-weight:650;line-height:1.3}
+.tcard .s{font-size:12px;color:var(--ink-2);margin-top:2px;line-height:1.35}
+.pillr{position:absolute;top:14px;right:14px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill .ic{width:14px;height:14px}
+.pill.acc-p{background:color-mix(in srgb,var(--A) 16%,var(--flaeche));color:var(--ink)}
+.pill.now{background:var(--primary);color:var(--on-primary)}
+.pill.good{background:color-mix(in srgb,var(--good) 16%,var(--flaeche));color:var(--ink)}
+.pill.warn{background:color-mix(in srgb,var(--warn) 16%,var(--flaeche));color:var(--ink)}
+.pbar{height:4px;border-radius:99px;background:color-mix(in srgb,var(--A) 14%,var(--surface-2));overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--A);transition:width .5s var(--ease)}
+.wide{display:flex;gap:12px;align-items:center;padding:14px;border-radius:14px;background:var(--flaeche);transition:transform .15s var(--ease),background .15s}
+.wide:hover{background:var(--flaeche-hover)}
+.wide.tinted{background:color-mix(in srgb,var(--A) 9%,var(--flaeche))}
+.wide .grow{flex:1}
+.wide .t{font-size:15px;font-weight:650}
+.wide .s{font-size:13px;color:var(--ink-2)}
+.chev{color:var(--ink-3)}
+
+/* Knöpfe */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 16px;line-height:1.3;text-align:center;border-radius:12px;background:var(--primary);color:var(--on-primary);font-size:15px;font-weight:600;transition:transform .12s var(--ease),opacity .15s}
+.btn.sec{background:var(--flaeche-hover);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink-2)}
+.btn[disabled]{opacity:.4;cursor:default}
+.btn .ic{width:18px;height:18px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+button:active:not([disabled]),.tcard:active,.wide:active{transform:scale(.97)}
+
+/* Segmented control */
+.seg{display:flex;gap:2px;padding:3px;border-radius:12px;background:var(--surface-2)}
+.seg button{flex:1;min-height:40px;padding:4px 8px;border-radius:9px;font-size:14px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:4px;transition:background .15s,color .15s}
+.seg button[aria-pressed=true]{background:var(--bg);color:var(--ink);box-shadow:var(--seg-shadow)}
+:root[data-theme=dark] .seg button[aria-pressed=true]{background:#3a3a38}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .seg button[aria-pressed=true]{background:#3a3a38}}
+.seg .ok-dot{width:16px;height:16px;color:var(--good)}
+
+/* Checkliste */
+.unit{padding:16px}
+.goal{display:flex;gap:8px;align-items:flex-start;color:var(--ink-2);font-size:14px;line-height:1.45}
+.goal .ic{width:16px;height:16px;margin-top:2px;color:var(--A)}
+.goal.big{font-size:15px;color:var(--ink)}
+.kap{background:var(--flaeche);border-radius:14px;padding:16px;scroll-margin-top:72px;transition:background .6s}
+.kap.flash{background:color-mix(in srgb,var(--A) 12%,var(--flaeche))}
+.khead{display:flex;gap:12px;align-items:flex-start}
+.knr{font-size:13px;font-weight:650;color:var(--A)}
+.ktitle{font-size:16px;font-weight:650;line-height:1.35;margin:1px 0 4px}
+.check{flex:none;width:28px;height:28px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;color:transparent;margin-top:2px}
+.check.on{background:var(--A);color:var(--bg)}
+.check .ic{width:16px;height:16px;stroke-width:2.6}
+.kbody{margin-top:16px;display:grid;gap:12px}
+.krow{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.krow .grow{flex:1}
+.kap.later{background:transparent;padding:12px 16px}
+.kap.later .ktitle{color:var(--ink-2)}
+.ex-list{display:grid;gap:8px}
+.ex{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;padding:12px 14px;border-radius:12px;background:var(--surface);text-align:left;transition:background .15s,transform .12s var(--ease)}
+.ex:hover{background:var(--surface-2)}
+.ex-st{flex:none;width:52px;height:32px;padding:0;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--A) 14%,var(--surface));color:var(--A);font-size:13px;letter-spacing:1px}
+.ex-t{display:block;font-size:15px;font-weight:650}
+.ex-s{display:block;font-size:13px;color:var(--ink-2)}
+.ex-go{color:var(--ink-3)}
+.ex-ok{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:var(--bg)}
+.ex-ok .ic{width:16px;height:16px;stroke-width:2.6}
+.ex.ok{background:color-mix(in srgb,var(--good) 9%,var(--surface))}
+.refl{display:grid;gap:8px}
+.refl .seg{max-width:360px}
+.refl .seg button{min-height:36px;font-size:13px}
+details.past{border-radius:14px;background:var(--flaeche)}
+details.past>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 16px;font-weight:650}
+details.past>summary::-webkit-details-marker{display:none}
+details.past>summary .chev{margin-left:auto;transition:transform .2s var(--ease)}
+details.past[open]>summary .chev{transform:rotate(90deg)}
+details.past .pinner{padding:0 8px 8px}
+details.past .kap{background:var(--bg)}
+details.later{margin-top:8px}
+details.later>summary{list-style:none;cursor:pointer;min-height:44px;display:flex;align-items:center;gap:6px;color:var(--ink-2);font-size:14px;font-weight:600;padding:0 4px}
+details.later>summary::-webkit-details-marker{display:none}
+
+/* Aufgaben */
+.qtile{background:var(--flaeche);border-radius:14px;padding:16px}
+.qhead{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.q{font-size:18px;line-height:1.5;font-weight:600;margin:0 0 16px}
+.speak{width:44px;height:44px;border-radius:12px;background:var(--surface);display:grid;place-items:center;color:var(--ink-2);flex:none}
+.speak[aria-pressed=true]{background:var(--primary);color:var(--on-primary)}
+.opt{display:block;width:100%;text-align:left;min-height:52px;padding:14px;border-radius:12px;background:var(--surface);margin-bottom:8px;font-size:17px;line-height:1.4;transition:background .15s,transform .12s var(--ease)}
+.opt:hover:not([disabled]){background:var(--surface-2)}
+.opt[disabled]{cursor:default}
+.good{background:color-mix(in srgb,var(--good) 14%,var(--surface))!important;color:var(--ink)!important;animation:pop .32s var(--spring)}
+.bad{background:color-mix(in srgb,var(--bad) 12%,var(--surface))!important;color:var(--ink)!important;animation:shake .3s var(--ease)}
+@keyframes pop{from{transform:scale(.9)}to{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-2px)}}
+.tf{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tf .opt{text-align:center;font-weight:600;margin:0}
+.sent{font-size:18px;line-height:2.4}
+.tok{display:inline-block;min-height:44px;min-width:44px;padding:6px 10px;margin:2px 0;border-radius:10px;background:var(--surface);font-size:18px;transition:background .15s,transform .12s var(--ease)}
+.tok[aria-pressed=true]{background:var(--primary);color:var(--on-primary)}
+.gapt{font-size:18px;line-height:2.6}
+select{min-height:44px;padding:6px 12px;border-radius:10px;border:0;background:var(--surface);color:var(--ink);font-size:17px;max-width:100%}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.match{grid-template-columns:1fr;gap:16px}}
+.chip{display:flex;gap:12px;align-items:center;width:100%;text-align:left;min-height:52px;padding:12px 14px;border-radius:12px;background:var(--surface);margin-bottom:8px;font-size:16px;line-height:1.35;transition:background .15s,transform .12s var(--ease)}
+.chip[aria-pressed=true]{background:var(--primary);color:var(--on-primary)}
+.chip .n{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--A) 18%,var(--surface));color:var(--ink);font-weight:700;font-size:13px}
+.chip.paired{background:var(--surface-2)}
+.srow{background:var(--surface);border-radius:12px;padding:14px;margin-bottom:8px;font-size:17px;line-height:1.4}
+.srow .seg{margin-top:12px}
+.srow .seg button{font-size:14px;min-height:40px}
+.ans{min-height:60px;background:var(--surface);border-radius:12px;padding:8px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ans .ph{color:var(--ink-2);padding:4px 8px;font-size:15px}
+.pool{display:flex;flex-wrap:wrap;gap:8px}
+.ochip{min-height:44px;padding:8px 12px;border-radius:10px;background:var(--surface);text-align:left;font-size:16px;line-height:1.35}
+.ans .ochip{background:var(--surface-2)}
+textarea{width:100%;min-height:140px;border:0;border-radius:12px;padding:14px;background:var(--surface);font-size:17px;line-height:1.5;resize:vertical;color:var(--ink)}
+input[type=text],input[type=password]{font-size:17px;min-height:44px;border:0;border-radius:10px;padding:8px 12px;background:var(--surface);color:var(--ink);width:100%;max-width:240px}
+.fb{border-radius:12px;padding:14px;margin-top:16px;display:flex;gap:12px;align-items:flex-start;font-size:16px;line-height:1.5;animation:fade .25s var(--ease)}
+.fb .ic{margin-top:2px}
+.fb.tip{background:color-mix(in srgb,var(--warn) 12%,var(--surface))}.fb.tip>.ic{color:var(--warn)}
+.fb.ok{background:color-mix(in srgb,var(--good) 13%,var(--surface))}.fb.ok>.ic{color:var(--good)}
+.fb.bad{background:color-mix(in srgb,var(--bad) 11%,var(--surface))}.fb.bad>.ic{color:var(--bad)}
+.fb.info{background:var(--surface)}.fb.info>.ic{color:var(--ink-2)}
+.model{white-space:pre-line}
+.tprog{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+.tprog .pbar{flex:1}
+
+/* Ergebnis und Karte */
+.result{text-align:center;padding:24px 16px}
+.done-ring{display:block;margin:0 auto 12px}
+.done-ring .bg{fill:none;stroke:color-mix(in srgb,var(--A) 14%,var(--surface-2));stroke-width:6}
+.done-ring .fg{fill:none;stroke:var(--A);stroke-width:6;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;animation:ringfill .9s var(--ease) both}
+.done-ring .ck{fill:none;stroke:var(--A);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .45s .75s var(--ease) forwards}
+@keyframes ringfill{from{stroke-dashoffset:var(--c)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.big{font-size:40px;font-weight:700;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.rgrid{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;text-align:left;max-width:420px;margin:16px auto 0;font-size:15px}
+.rgrid dt{color:var(--ink-2)}
+.rgrid dd{margin:0;font-weight:600}
+.prize{text-align:center;padding:24px 16px;border-radius:14px;background:color-mix(in srgb,var(--A) 9%,var(--flaeche))}
+.prize .ibox{margin:0 auto 12px;width:44px;height:44px}
+.prize .ibox .ic{width:22px;height:22px}
+.code{font-size:40px;font-weight:700;letter-spacing:.08em;font-variant-numeric:tabular-nums;margin:4px 0}
+.howto{margin:16px auto 0;max-width:400px;font-size:15px}
+.badge-t{text-align:left}
+.locked{background:var(--flaeche)!important}.locked .ibox{background:var(--surface-2);color:var(--ink-3)}
+.card-stars{display:flex;justify-content:center;gap:4px;margin-top:8px}.card-stars .ic{width:22px;height:22px;color:var(--ink-3)}.card-stars .ic.on{color:var(--warn);fill:currentColor}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}
+.small .ic{width:14px;height:14px;vertical-align:-2px}
+
+/* Hinweise, Dialog, Fuß */
+.note{display:flex;gap:12px;align-items:flex-start}
+.note>.ic{color:var(--good);margin-top:2px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;padding:20px;z-index:9;animation:fade .2s var(--ease)}
+.modal .sheet{max-width:440px;width:100%;background:var(--bg);border-radius:14px;padding:16px}
+.used{background:var(--flaeche);border-radius:12px;padding:12px 16px;display:flex;justify-content:space-between;gap:12px;font-variant-numeric:tabular-nums}
+footer{max-width:1100px;margin:0 auto;padding:24px 20px calc(32px + env(safe-area-inset-bottom));color:var(--ink-2);text-align:center;font-size:12px}
+footer a{display:inline-block;min-height:44px;line-height:44px;padding:0 8px;color:var(--ink-2)}
+
+/* Bewegung */
+@keyframes fade{from{opacity:0}}
+@keyframes inR{from{opacity:0;transform:translateX(28px)}}
+@keyframes inL{from{opacity:0;transform:translateX(-28px)}}
+@keyframes up{from{opacity:0;transform:translateY(10px) scale(.98)}}
+.enter-f{animation:inR .2s var(--ease)}
+.enter-b{animation:inL .2s var(--ease)}
+.st{animation:up .35s var(--ease) both;animation-delay:calc(var(--i,0) * 35ms)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="i-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+ <symbol id="i-next" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+ <symbol id="i-speak" viewBox="0 0 24 24"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 18.4a9 9 0 0 0 0-12.7"/></symbol>
+ <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+ <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+ <symbol id="i-landmark" viewBox="0 0 24 24"><path d="M3 22h18"/><path d="M6 18v-7"/><path d="M10 18v-7"/><path d="M14 18v-7"/><path d="M18 18v-7"/><path d="m12 2 8 5H4z"/></symbol>
+ <symbol id="i-class" viewBox="0 0 24 24"><path d="M21.4 10.9a1 1 0 0 0 0-1.8l-8.6-3.9a2 2 0 0 0-1.7 0L2.6 9.1a1 1 0 0 0 0 1.8l8.6 3.9a2 2 0 0 0 1.7 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol>
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M11.5 2.3a.5.5 0 0 1 .9 0l2.3 4.7a2 2 0 0 0 1.5 1.1l5.2.8a.5.5 0 0 1 .3.9l-3.8 3.7a2 2 0 0 0-.6 1.8l.9 5.2a.5.5 0 0 1-.8.5l-4.6-2.4a2 2 0 0 0-1.9 0L6.3 21a.5.5 0 0 1-.8-.5l.9-5.2a2 2 0 0 0-.6-1.8L2 9.8a.5.5 0 0 1 .3-.9l5.2-.8a2 2 0 0 0 1.5-1.1z"/></symbol>
+ <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+ <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+ <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+ <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+ <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3l14 9-14 9z"/></symbol>
+ <symbol id="i-redo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.7 2.7L3 8"/><path d="M3 3v5h5"/></symbol>
+ <symbol id="i-medal" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 12.9 17 22l-5-3-5 3 1.5-9.1"/></symbol>
+ <symbol id="i-cal" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></symbol>
+ <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+</svg>
+<header class="bar" id="bar"><div class="bar-in"></div></header>
+<main class="wrap" id="app" tabindex="-1"></main>
+<footer>Freiwillige Übungsseite von Herrn Zell · keine Anmeldung · keine Datenspeicherung<br><a href="#lehrer">Lehrkraft</a></footer>
+<div id="modal"></div>
+<div class="sr" aria-live="polite" id="live"></div>
+<script>
+{
+/* ================= INHALTE (Stand: 23.11.2026, aufgebaut wie die Checklisten in Craft) ================= */
+const MC=(lv,q,opts,tip,ex)=>({t:"mc",lv,q,opts,tip,ex});
+const TF=(lv,q,a,tip,ex)=>({t:"tf",lv,q,a,tip,ex});
+const GAP=(lv,q,s,g,tip,ex)=>({t:"gap",lv,q,s,g,tip,ex});
+const MA=(lv,q,pairs,tip,ex)=>({t:"match",lv,q,pairs,tip,ex});
+const SO=(lv,q,cats,items,tip,ex)=>({t:"sort",lv,q,cats,items,tip,ex});
+const OR=(lv,q,items,tip,ex)=>({t:"order",lv,q,items,tip,ex});
+const MK=(lv,q,s,tip,ex)=>({t:"mark",lv,q,s,tip,ex});
+const FR=(lv,q,model,tip)=>({t:"free",lv,q,model,tip});
+const KAP=(nr,titel,ziel,d,tasks)=>({nr,titel,ziel,d,tasks:tasks||[]});
+const SEC=(titel,kap)=>({titel,kap});
+
+/* gemeinsam genutzte Aufgaben (9d und 10d) */
+const HA_SORT=lv=>SO(lv,"Thema Hausaufgaben: Pro oder Contra?",["Pro Hausaufgaben","Contra Hausaufgaben"],[["Hausaufgaben bereiten auf Klassenarbeiten vor.",0],["Durch Hausaufgaben wiederholt man die Themen des Unterrichts.",0],["Man lernt, selbstständig zu lernen.",0],["Hausaufgaben können für die Einzelarbeit zu kompliziert sein.",1],["Durch Hausaufgaben bleibt zu wenig Freizeit.",1],["Zu Hause kann einen oft niemand unterstützen.",1]],"Frage dich: Spricht der Satz für oder gegen Hausaufgaben?","Pro: Vorbereitung, Wiederholung, Selbstständigkeit. Contra: zu schwer allein, weniger Freizeit, keine Unterstützung.");
+const SACHTEXT_OEPNV=()=>[
+ TF(1,"Ein Sachtext kann Argumente für und gegen eine Sache enthalten.",true,"Denk an den Text zum kostenlosen ÖPNV.","Richtig. Oft stellt ein Sachtext beide Seiten dar – du musst die Argumente herausarbeiten."),
+ MC(1,"Was machst du zuerst, wenn du einem Sachtext Argumente entnehmen willst?",["Den Text überfliegen, um das Thema zu erfassen","Sofort die Argumentation schreiben","Nur die Überschrift lesen","Alle Wörter abschreiben"],"Erst einen Überblick verschaffen.","Zuerst überfliegst du den Text und erfasst das Thema. Danach liest du genau und markierst."),
+ MC(1,"Welche Textstelle enthält ein Argument?",["Ein kostenloser Nahverkehr würde vor allem Familien mit wenig Geld entlasten.","Der Bus fährt um 7:12 Uhr ab.","Die Haltestelle heißt „Marktplatz“.","Der Text erschien im Oktober."],"Ein Argument begründet eine Position.","Nur der erste Satz spricht für eine Position (Pro kostenloser ÖPNV). Die anderen sind reine Informationen."),
+ SO(2,"Kostenloser ÖPNV: Pro oder Contra?",["Pro","Contra"],[["Familien mit wenig Geld können sich Mobilität leisten.",0],["Mehr Menschen lassen das Auto stehen, das schont das Klima.",0],["Jugendliche werden unabhängiger vom Elterntaxi.",0],["Die Kosten müssen Städte und Länder über Steuern bezahlen.",1],["Busse und Bahnen könnten überfüllt werden.",1],["Auf dem Land fehlen oft Verbindungen – ein Gratis-Ticket allein hilft dort wenig.",1]],"Spricht der Satz für oder gegen einen kostenlosen ÖPNV?","Pro: Teilhabe, Klima, Selbstständigkeit. Contra: Kosten, Überfüllung, fehlendes Angebot auf dem Land."),
+ MC(2,"Mit welcher Formulierung kündigt ein Sachtext oft ein Gegenargument an?",["Kritiker halten dagegen, dass …","Außerdem …","Zum Beispiel …","Erstens …"],"Wer ist dagegen?","„Kritiker halten dagegen“ zeigt: Jetzt kommt die andere Seite."),
+ FR(3,"Auszug (ausgedacht): „Befürworter betonen, dass ein kostenloser Nahverkehr den Autoverkehr in den Innenstädten verringern würde. Kritiker halten dagegen, dass die Städte dann jedes Jahr Millionen aus Steuergeldern aufbringen müssten.“ Arbeite ein Pro- und ein Contra-Argument heraus.","Pro: Ein kostenloser Nahverkehr verringert den Autoverkehr in den Innenstädten.\nContra: Die Städte müssten jedes Jahr Millionen aus Steuergeldern bezahlen.","Achte auf „Befürworter“ und „Kritiker“.")
+];
+
+const DATA=[
+{id:"6f",name:"Klasse 6f",color:"#3f5bd9",faecher:[
+ {id:"d",name:"Deutsch",icon:"book",color:"#3f5bd9",units:[
+  {id:"6f-sagen",titel:"Sagen, Nacherzählen und Zeichensetzung",ziel:"Ich kann eine Sage lesen, verstehen, sie nacherzählen und Satzzeichen korrekt anwenden.",prefix:"Sagen",ka:{d:"2026-12-18",txt:"Klassenarbeit",geplant:true},sections:[
+  SEC("Sagen kennenlernen",[
+   KAP(1,"Eine Sage kennenlernen","Ich kann beschreiben, was eine Sage ist.","2026-11-13",[
+    MC(1,"Was ist eine Sage?",["Eine alte Geschichte, die man sich früher erzählt hat","Ein Bericht aus der Zeitung","Ein Gedicht mit Reimen","Eine Anleitung zum Basteln"],"Denk daran: Früher gab es keine Bücher für alle.","Sagen sind alte Geschichten. Die Menschen haben sie lange mündlich weitererzählt. Erst später hat man sie aufgeschrieben."),
+    TF(1,"Eine Sage spielt oft an einem Ort, den es wirklich gibt.",true,"Denk an die Loreley oder an Loch Ness.","Richtig. Die Loreley ist ein Felsen am Rhein. Loch Ness ist ein See in Schottland."),
+    GAP(1,"Wähle das passende Wort.","Eine Sage hat einen wahren {0}. Früher hat man Sagen {1} weitergegeben.",[["Kern","Reim","Preis"],["mündlich","per Brief","im Internet"]],"Ein Teil der Sage stimmt wirklich. Und: Wie hat man früher Geschichten weitergegeben?","Eine Sage hat einen wahren Kern. Man hat sie mündlich weitererzählt."),
+    TF(2,"In einer Sage passiert nie etwas Übernatürliches.",false,"Gibt es in Sagen Ungeheuer, Riesen oder Geister?","Falsch. In Sagen kommen oft Ungeheuer, Riesen, Geister oder Zauber vor."),
+    MC(2,"Woran erkennst du eher eine Sage als ein Märchen?",["Die Geschichte nennt einen echten Ort.","Sie beginnt mit „Es war einmal“.","Tiere können sprechen.","Am Ende wird alles gut."],"Märchen spielen „irgendwo“. Sagen nicht.","Märchen spielen an einem unbestimmten Ort. Sagen nennen einen echten Ort."),
+    MC(2,"Warum haben sich die Menschen früher Sagen erzählt?",["Um Dinge zu erklären, die sie nicht verstanden haben","Um Werbung zu machen","Um Rechnen zu üben","Weil der König es befohlen hat"],"Stell dir vor: Ein Schiff verunglückt und keiner weiß, warum.","Sagen erklären oft seltsame Ereignisse, zum Beispiel Unglücke an einem gefährlichen Ort."),
+    MK(3,"Tippe die Wörter an, die einen echten Ort nennen.","Vor|langer|Zeit|lebte|am|*Rhein|bei|*St. Goarshausen|eine|schöne|Frau.","Es sind zwei Stellen. Eine ist ein Fluss, eine ist eine Stadt.","Der Rhein ist ein Fluss. St. Goarshausen ist eine Stadt am Rhein."),
+    OR(3,"Wie entsteht eine Sage? Bringe die Schritte in die richtige Reihenfolge.",["An einem Ort passiert etwas Seltsames.","Die Menschen erzählen davon.","Beim Weitererzählen wird immer mehr dazu erfunden.","Viel später schreibt jemand die Geschichte auf."],"Am Anfang steht ein echtes Ereignis. Am Ende steht das Aufschreiben.","Zuerst passiert etwas. Dann wird es weitererzählt und ausgeschmückt. Ganz am Ende wird es aufgeschrieben."),
+    FR(3,"Erkläre in ein bis zwei Sätzen: Warum ist eine Sage nicht ganz erfunden?","Eine Sage hat einen wahren Kern. Den Ort gibt es wirklich, oder dort ist wirklich etwas passiert. Beim Weitererzählen wurde aber vieles dazu erfunden.","Denk an das Wort „wahrer Kern“.")]),
+   KAP(2,"Das Monster von Loch Ness","Ich kenne die Sage „Das Monster von Loch Ness“.","2026-11-16",[
+    TF(1,"Loch Ness ist ein See in Schottland.",true,"Schottland liegt im Norden von Großbritannien.","Richtig. In diesem See soll das Monster leben."),
+    MC(1,"Wie nennen viele Menschen das Monster von Loch Ness?",["Nessie","Nemo","Yeti","Rübezahl"],"Der Name kommt von „Ness“.","Viele nennen es liebevoll „Nessie“."),
+    MA(2,"Ordne zu: Merkmal der Sage und Beispiel aus Loch Ness.",[["echter Ort","der See Loch Ness in Schottland"],["übernatürliches Wesen","ein riesiges Ungeheuer im Wasser"],["wahrer Kern","Der See ist sehr tief und dunkel."],["Erklärung","Die Sage erklärt seltsame Wellen und Schatten im Wasser."]],"Ein Ort ist etwas, das du auf einer Karte findest.","Auch Loch Ness hat alle Merkmale einer Sage."),
+    TF(2,"Es ist bewiesen, dass es das Monster wirklich gibt.",false,"Hat jemals jemand Nessie gefangen?","Falsch. Niemand konnte es beweisen. Ein berühmtes Foto von 1934 hat sich später sogar als Fälschung herausgestellt."),
+    MC(3,"Was macht Loch Ness zu einer Sage und nicht zu einem Märchen?",["Den See gibt es wirklich.","Ein Monster kommt vor.","Es gibt kein Happy End.","Die Geschichte ist spannend."],"Monster gibt es auch in Märchen.","Der echte Ort ist das wichtigste Merkmal einer Sage."),
+    FR(3,"Warum glauben manche Menschen bis heute an Nessie? Nenne einen Grund.","Der See ist sehr tief und dunkel. Man kann nicht bis zum Grund sehen. Deshalb kann man sich gut vorstellen, dass dort etwas Großes lebt. Außerdem erzählen immer wieder Menschen, sie hätten etwas gesehen.","Denk an den See selbst.")])]),
+  SEC("Nebensätze und Zeichensetzung",[
+   KAP(3,"Königreiche erkennen","Ich erkenne Verben und ihre Königreiche.","2026-11-20",[
+    MK(1,"Tippe den König an. Der König ist das Verb.","Der|Hund|*bellt|laut.","Welches Wort sagt, was der Hund tut?","„bellt“ ist das Verb. Es ist der König im Satz."),
+    MK(1,"Tippe den König an.","Die|Kinder|*spielen|im|Garten.","Was tun die Kinder?","„spielen“ ist das Verb, also der König."),
+    MC(1,"Was braucht jedes Königreich?",["Genau einen König, also ein Verb","Ein Komma","Mindestens drei Nomen","Ein Ausrufezeichen"],"Ohne König gibt es kein Reich.","Jedes Königreich hat genau einen König. Der König ist das Verb."),
+    TF(1,"In einem Königreich gibt es genau einen König.",true,"Kann ein Reich zwei Könige haben?","Richtig. Ein Königreich hat genau ein Verb als König."),
+    MK(2,"Dieser Satz hat zwei Königreiche. Tippe beide Könige an.","Der|Riese|*schläft,|die|Bauern|*ernten|das|Korn.","Suche zwei Verben: Was tut der Riese? Was tun die Bauern?","„schläft“ und „ernten“ sind die beiden Könige. Also gibt es zwei Königreiche."),
+    MC(2,"Wie viele Königreiche hat der Satz? „Die Ritter reiten los, weil der Drache das Dorf bedroht.“",["2","1","3","4"],"Zähle die Verben.","Zwei Verben: „reiten“ und „bedroht“. Also zwei Königreiche."),
+    MC(2,"Wie viele Königreiche hat der Satz? „Am Abend singt die Frau auf dem Felsen.“",["1","2","3","0"],"Zähle die Verben.","Nur ein Verb: „singt“. Also ein Königreich."),
+    MK(2,"Tippe alle Könige an.","Das|Ungeheuer|*schwimmt|im|See,|die|Fischer|*erschrecken,|ihr|Boot|*schaukelt.","Es sind drei Verben.","„schwimmt“, „erschrecken“ und „schaukelt“ sind die drei Könige."),
+    MC(3,"Hier fehlt ein Komma zwischen zwei Königreichen: „Der Wind heult die Wellen schlagen gegen den Felsen.“ Wo kommt es hin?",["nach „heult“","nach „Wind“","nach „Wellen“","nach „schlagen“"],"Finde zuerst die beiden Könige. Das Komma kommt zwischen die beiden Reiche.","Der Wind heult, die Wellen schlagen gegen den Felsen. Zwei Könige: „heult“ und „schlagen“."),
+    TF(3,"Stehen zwei Königreiche ohne „und“ oder „oder“ nebeneinander, trennst du sie mit einem Komma.",true,"Schau dir noch einmal den Satz mit dem Wind und den Wellen an.","Richtig. Zwischen zwei Königreichen steht ein Komma."),
+    FR(3,"Schreibe einen Satz mit zwei Königreichen über eine Sage. Welche Wörter sind die Könige?","Beispiel: Die Frau singt auf dem Felsen, die Schiffer schauen nach oben.\nKönige: „singt“ und „schauen“.","Du brauchst zwei Verben und ein Komma.")]),
+   KAP(4,"Hauptsatz – der König","Ich kann Hauptsätze erkennen.","2026-11-23",[
+    MC(1,"Wo steht der König im Hauptsatz?",["an zweiter Stelle","ganz am Ende","immer als erstes Wort","er fehlt"],"Der Hund | bellt | laut.","Im Hauptsatz steht der König an zweiter Stelle: Der Hund | bellt | laut."),
+    MK(1,"Tippe den König an.","Die|Blumen|*wachsen|schnell.","Was tun die Blumen?","„wachsen“ ist der König. Er steht an zweiter Stelle."),
+    TF(1,"Ein Hauptsatz kann allein stehen.",true,"„Die Sonne scheint hell.“ – Ist das ein ganzer Satz?","Richtig. Ein Hauptsatz ist ein vollständiger Satz."),
+    MK(2,"Tippe den König an.","Am Abend|*singt|die Frau|auf dem Felsen.","Der König steht an zweiter Stelle – auch wenn der Satz nicht mit der Frau beginnt.","„singt“ steht an zweiter Stelle. „Am Abend“ ist die erste Stelle."),
+    MC(2,"Welcher Satz ist ein Hauptsatz?",["Die Fischer bleiben an Land.","weil das Ungeheuer im See lebt","dass der Drache schläft","als die Sonne untergeht"],"Ein Hauptsatz kann allein stehen.","„Die Fischer bleiben an Land.“ ist ein vollständiger Hauptsatz. Die anderen sind Nebensätze."),
+    OR(3,"Baue einen Hauptsatz, der mit „Im Wald“ beginnt.",["Im Wald","lebt","ein Riese."],"Der König steht an zweiter Stelle.","Im Wald | lebt | ein Riese. – Der König „lebt“ steht an zweiter Stelle."),
+    MK(3,"Tippe den König an.","Nach dem Sturm|*fanden|die Fischer|ein altes Boot.","Welches Satzglied steht an zweiter Stelle?","„fanden“ ist der König an zweiter Stelle."),
+    FR(3,"Schreibe zwei Hauptsätze über eine Sage. Achte darauf, dass der König an zweiter Stelle steht.","Beispiel: Der Drache bewacht den Schatz. Am Morgen kommt ein mutiger Ritter.\nKönige: „bewacht“ und „kommt“ – beide an zweiter Stelle.","Beginne einen Satz einmal mit einer Zeitangabe.")]),
+   KAP(5,"Nebensatz – das Königskind","Ich erkenne Nebensätze und kann den König im Nebensatz bestimmen.","2026-11-25",[
+    MC(1,"Wo steht der König im Nebensatz?",["ganz am Ende","an zweiter Stelle","immer als erstes Wort","in der Mitte"],"…, weil der Drache Feuer spuckt.","Im Nebensatz steht der König am Ende: weil der Drache Feuer spuckt."),
+    TF(1,"Ein Nebensatz kann allein stehen.",false,"Lies nur „weil es regnet.“ Ist das ein ganzer Satz?","Falsch. Ein Nebensatz ist das Königskind. Er braucht einen Hauptsatz."),
+    MK(1,"Tippe den König im Nebensatz an.","Die|Leute|staunen,|weil|der|Drache|Feuer|*spuckt.","Der König im Nebensatz steht am Ende.","„spuckt“ steht am Ende des Nebensatzes. Es ist dort der König."),
+    SO(2,"Ist das ein Hauptsatz oder ein Nebensatz?",["Hauptsatz","Nebensatz"],[["Der Ritter reitet los.",0],["weil das Dorf in Gefahr ist",1],["dass der Drache schläft",1],["Am Abend singt die Frau.",0],["als die Sonne untergeht",1],["Die Schiffer hören zu.",0]],"Schau, wo das Verb steht: an zweiter Stelle oder am Ende?","Hauptsätze haben das Verb an zweiter Stelle. Nebensätze haben das Verb am Ende und beginnen oft mit weil, dass oder als."),
+    GAP(2,"Wähle das passende Wort.","Im Hauptsatz steht der König an {0} Stelle. Im Nebensatz steht der König am {1}. Zwischen Hauptsatz und Nebensatz steht ein {2}.",[["zweiter","erster","letzter"],["Ende","Anfang","Rand"],["Komma","Punkt","Fragezeichen"]],"Denk an den König und das Königskind.","Hauptsatz: König an zweiter Stelle. Nebensatz: König am Ende. Dazwischen steht ein Komma."),
+    MC(2,"Welcher Teil ist der Nebensatz? „Die Fischer bleiben an Land, weil das Ungeheuer im See lebt.“",["weil das Ungeheuer im See lebt","Die Fischer bleiben an Land","Die Fischer","im See"],"Der Nebensatz beginnt oft mit „weil“.","„weil das Ungeheuer im See lebt“ ist der Nebensatz. Der König „lebt“ steht am Ende."),
+    TF(2,"„Obwohl es regnet.“ ist ein vollständiger Satz.",false,"Fehlt da nicht noch etwas?","Falsch. Das ist nur ein Nebensatz. Es fehlt der Hauptsatz, z. B.: Obwohl es regnet, gehen wir raus."),
+    MK(3,"Tippe beide Könige an.","Als|das|Schiff|den|Felsen|*erreichte,|*sang|die|Frau|ein|Lied.","Vorne steht der Nebensatz. Sein König steht am Ende. Danach kommt der König vom Hauptsatz.","„erreichte“ ist der König im Nebensatz (am Ende). „sang“ ist der König im Hauptsatz. Der ganze Nebensatz steht hier an erster Stelle."),
+    OR(3,"Baue einen Nebensatz. Tippe die Wörter in der richtigen Reihenfolge an.",["weil","der","Riese","laut","schnarcht"],"Ein Nebensatz beginnt mit „weil“. Der König kommt ans Ende.","weil der Riese laut schnarcht – der König „schnarcht“ steht am Ende."),
+    FR(3,"Mache aus zwei Sätzen einen Satz mit „weil“: „Die Schiffer passen nicht auf. Die Frau singt so schön.“","Die Schiffer passen nicht auf, weil die Frau so schön singt.","Nach „weil“ wandert der König ans Ende. Komma nicht vergessen.")]),
+   KAP(6,"Konjunktionen","Ich erkenne Konjunktionen und kann zwischen nebenordnenden und unterordnenden Konjunktionen unterscheiden.","2026-11-27",[
+    SO(1,"Ordne die Konjunktionen zu.",["nebenordnend","unterordnend"],[["und",0],["weil",1],["oder",0],["dass",1],["aber",0],["obwohl",1],["denn",0],["wenn",1]],"Unterordnende Konjunktionen leiten einen Nebensatz ein. Dann steht der König am Ende.","Nebenordnend: und, oder, aber, denn. Unterordnend: weil, dass, obwohl, wenn."),
+    TF(1,"Nach „weil“ steht der König am Ende.",true,"…, weil der Drache Feuer spuckt.","Richtig. „weil“ leitet einen Nebensatz ein. Der König steht am Ende."),
+    MC(1,"Welches Wort ist eine Konjunktion?",["aber","Felsen","schnell","singen"],"Konjunktionen sind Bindewörter.","„aber“ verbindet Sätze. Es ist eine Konjunktion."),
+    MK(2,"Tippe die Konjunktion an.","Der|Drache|schläft,|*denn|er|ist|satt.","Welches Wort verbindet die beiden Teile?","„denn“ ist eine nebenordnende Konjunktion. Danach steht der König an zweiter Stelle: denn er | ist | satt."),
+    GAP(2,"Wähle die passende Konjunktion.","Ich bleibe zu Hause, {0} es so stark regnet. Der Ritter ist mutig, {1} er hat trotzdem Angst.",[["weil","denn","und"],["aber","weil","dass"]],"Schau, wo der König steht: am Ende oder an zweiter Stelle?","…, weil es so stark regnet (König am Ende). …, aber er hat trotzdem Angst (König an zweiter Stelle)."),
+    TF(2,"Vor „aber“ steht ein Komma.",true,"Er geht ins Kino, … sie bleibt zu Hause.","Richtig: Er geht ins Kino, aber sie bleibt zu Hause."),
+    MC(3,"Welcher Satz ist richtig?",["Er bleibt im Boot, denn er hat Angst.","Er bleibt im Boot, denn er Angst hat.","Er bleibt im Boot, weil er hat Angst.","Er bleibt im Boot denn, er hat Angst."],"Nach „denn“ steht der König an zweiter Stelle. Nach „weil“ steht er am Ende.","„denn“ ist nebenordnend: denn er | hat | Angst. Richtig wäre auch: …, weil er Angst hat."),
+    FR(3,"Verbinde mit einer unterordnenden Konjunktion: „Das Dorf feiert. Der Drache ist besiegt.“","Das Dorf feiert, weil der Drache besiegt ist.\nAuch möglich: …, da der Drache besiegt ist. / Nachdem der Drache besiegt ist, feiert das Dorf.","Nimm „weil“ und schiebe den König ans Ende.")]),
+   KAP(7,"Satzreihe und Satzgefüge","Ich kann Satzreihen und Satzgefüge unterscheiden.","2026-11-30",[
+    MC(1,"Was ist eine Satzreihe?",["Hauptsatz + Hauptsatz","Hauptsatz + Nebensatz","nur ein Nebensatz","ein Satz ohne Verb"],"Reihe: Gleiches steht nebeneinander.","Eine Satzreihe besteht aus zwei oder mehr Hauptsätzen."),
+    MC(1,"Was ist ein Satzgefüge?",["Hauptsatz + Nebensatz","Hauptsatz + Hauptsatz","zwei Nebensätze ohne Hauptsatz","ein Satz mit Fragezeichen"],"Im Gefüge hängt etwas vom König ab.","Ein Satzgefüge besteht aus einem Hauptsatz und mindestens einem Nebensatz."),
+    SO(2,"Satzreihe oder Satzgefüge?",["Satzreihe","Satzgefüge"],[["Der Ritter kämpft, aber der Drache ist stärker.",0],["Der Ritter kämpft, weil er das Dorf retten will.",1],["Die Frau singt, denn sie ist traurig.",0],["Wenn es dunkel wird, kommt der Geist.",1],["Es donnert, die Kinder laufen nach Hause.",0],["Alle wissen, dass der See tief ist.",1]],"Satzreihe = Hauptsatz + Hauptsatz. Satzgefüge = Hauptsatz + Nebensatz.","Ein Satzgefüge hat einen Nebensatz mit dem König am Ende. Eine Satzreihe hat nur Hauptsätze."),
+    MC(2,"Wo fehlt das Komma? „Die Bauern freuen sich weil der Riese weiterzieht.“",["vor „weil“","nach „Bauern“","nach „weil“","vor „weiterzieht“"],"Das Komma steht zwischen Hauptsatz und Nebensatz.","Die Bauern freuen sich, weil der Riese weiterzieht."),
+    MK(3,"Tippe das Wort an, vor das ein Komma gehört.","Die|Kinder|hören|zu|*obwohl|die|Sage|lang|ist.","Das Komma steht vor der Konjunktion, die den Nebensatz einleitet.","Die Kinder hören zu, obwohl die Sage lang ist."),
+    FR(3,"Schreibe eine Satzreihe und ein Satzgefüge über eine Sage.","Satzreihe: Der Riese schläft, aber die Bauern sind wach.\nSatzgefüge: Die Bauern sind leise, weil der Riese schläft.","Satzreihe mit aber/denn/und, Satzgefüge mit weil/dass/wenn.")])]),
+  SEC("Sagen lesen, verstehen und nacherzählen",[
+   KAP(8,"Eine Sage lesen und verstehen","Ich kann eine Sage lesen und verstehen.","2026-12-04"),
+   KAP(9,"Das trojanische Pferd","Ich kenne die Sage des trojanischen Pferdes und kann sie nacherzählen.","2026-12-07"),
+   KAP(10,"Eine Sage nacherzählen","Ich kann eine Sage nacherzählen, die mir gefällt.","2026-12-11"),
+   KAP(11,"Der Rattenfänger von Hameln","Ich kann die Sage „Der Rattenfänger von Hameln“ lesen, verstehen und nacherzählen.","2026-12-14")])]},
+  {id:"6f-wus",titel:"Wortarten und Satzglieder",ziel:"Ich kann Wortarten und Satzglieder erkennen, bestimmen und richtig verwenden.",prefix:"",past:"Klassenarbeit am 9.11. geschrieben",sections:[
+  SEC("Gemischte Aufgaben",[
+   KAP(1,"Wortarten und Satzglieder","Ich kann Wortarten und Satzglieder unterscheiden und den Unterschied erklären.","2026-09-20",[
+    TF(1,"Die Wortart bestimmt man für jedes einzelne Wort.",true,"Ein Satzglied kann aus mehreren Wörtern bestehen.","Richtig. Die Wortart gehört zu einem einzelnen Wort. Ein Satzglied kann aus mehreren Wörtern bestehen."),
+    MC(2,"Was ist ein Satzglied?",["Ein Wort oder eine Wortgruppe, die man bei der Umstellprobe nur zusammen verschieben kann","Immer genau ein Wort","Ein Satzzeichen","Immer ein Nomen"],"Denk an die Umstellprobe.","Ein Satzglied bleibt beim Umstellen zusammen, z. B. „die alte Frau“."),
+    FR(3,"Erkläre den Unterschied zwischen Wortart und Satzglied.","Die Wortart ist der Name eines einzelnen Wortes. Sie ändert sich nicht, egal wo das Wort im Satz steht. Ein Satzglied ist ein Wort oder eine Wortgruppe, die man nur zusammen umstellen kann. Es zeigt, welche Aufgabe die Wörter im Satz haben.","Einzelnes Wort – Aufgabe im Satz.")])]),
+  SEC("Wortebene",[
+   KAP(2,"Nomen","Ich erkenne Nomen im Satz und kann sie deklinieren.","2026-09-25",[
+    MK(1,"Tippe alle Nomen an.","Der|kleine|*Hund|spielt|mit|dem|roten|*Ball.","Nomen schreibt man groß. Vor ihnen kann ein Artikel stehen.","„Hund“ und „Ball“ sind Nomen."),
+    MC(2,"Welches Wort ist ein Nomen?",["Freundschaft","freundlich","befreunden","sehr"],"Nomen schreibt man groß.","„Freundschaft“ ist ein Nomen – du kannst „die“ davorsetzen."),
+    MC(3,"„Ich gebe dem Hund einen Knochen.“ In welchem Fall steht „dem Hund“?",["Dativ","Nominativ","Akkusativ","Genitiv"],"Frage: Wem gebe ich den Knochen?","„Wem?“ – das ist der Dativ.")]),
+   KAP(3,"Adjektive","Ich kenne die Wortart Adjektiv, kann sie steigern und deklinieren.","2026-09-28",[
+    MK(1,"Tippe alle Adjektive an.","Die|*alte|Burg|steht|auf|einem|*hohen|Berg.","Adjektive sagen, wie etwas ist.","„alte“ und „hohen“ sind Adjektive."),
+    OR(2,"Steigere das Adjektiv: Bringe die Formen in die richtige Reihenfolge.",["groß","größer","am größten"],"Grundform – Komparativ – Superlativ.","groß – größer – am größten."),
+    GAP(3,"Wähle die richtige Form.","Der Riese ist {0} als der Zwerg. Der Drache ist am {1}.",[["stärker","stark","stärksten"],["stärksten","stärker","stark"]],"Bei „als“ brauchst du die erste Steigerungsstufe.","Der Riese ist stärker als der Zwerg. Der Drache ist am stärksten.")]),
+   KAP(4,"Artikel","Ich kenne die Wortart Artikel und kann sie erkennen.","2026-09-30",[
+    MC(1,"Welche Wörter sind bestimmte Artikel?",["der, die, das","ein, eine","und, oder","ich, du"],"Bestimmt = man weiß genau, welches gemeint ist.","der, die, das sind bestimmte Artikel."),
+    MK(2,"Tippe alle Artikel an.","*Der|Ritter|sieht|*einen|Drachen|und|*die|Burg.","Artikel stehen vor Nomen.","„Der“, „einen“ und „die“ sind Artikel."),
+    TF(3,"„eine“ ist ein unbestimmter Artikel.",true,"bestimmt: die – unbestimmt: …","Richtig. ein, eine sind unbestimmte Artikel.")]),
+   KAP(5,"Pronomen","Ich kenne Pronomen und erkenne sie im Satz.","2026-10-02",[
+    MC(1,"Wofür steht ein Pronomen?",["für ein Nomen","für ein Verb","für ein Adjektiv","für ein Satzzeichen"],"Pronomen heißt auch „Fürwort“.","Ein Pronomen steht für ein Nomen: die Frau → sie."),
+    MK(2,"Tippe das Pronomen an.","Die|Frau|singt.|*Sie|sitzt|auf|dem|Felsen.","Welches Wort ersetzt „die Frau“?","„Sie“ steht für „die Frau“."),
+    MK(3,"Tippe alle Pronomen an.","*Er|gibt|*ihr|den|Hut.","Es sind zwei. „den“ ist ein Artikel.","„Er“ und „ihr“ sind Pronomen.")]),
+   KAP(6,"Präpositionen","Ich kenne Präpositionen und kann sie erkennen.","2026-10-05",[
+    MC(1,"Welches Wort ist eine Präposition?",["unter","Tisch","schnell","laufen"],"Präpositionen sagen oft, wo etwas ist.","„unter“ ist eine Präposition."),
+    MK(2,"Tippe alle Präpositionen an.","Die|Katze|schläft|*unter|dem|Tisch|*neben|der|Tür.","Wo schläft die Katze?","„unter“ und „neben“ sind Präpositionen."),
+    TF(3,"Präpositionen kann man verändern, zum Beispiel steigern.",false,"Kann man „unter“ steigern?","Falsch. Präpositionen bleiben immer gleich.")]),
+   KAP(7,"Verben","Ich kenne die Wortart Verben und kann sie konjugieren.","2026-10-09",[
+    MK(1,"Tippe das Verb an.","Die|Kinder|*spielen|im|Garten.","Was tun die Kinder?","„spielen“ ist ein Verb."),
+    GAP(2,"Konjugiere „laufen“.","ich {0}, du {1}, er {2}",[["laufe","läufst","läuft"],["läufst","laufe","läuft"],["läuft","laufe","läufst"]],"Bei du und er/sie/es ändert sich der Vokal.","ich laufe, du läufst, er läuft."),
+    MC(3,"Was ist die Grundform (Infinitiv) von „sang“?",["singen","sang","gesungen","singt"],"Die Grundform steht im Wörterbuch.","Die Grundform ist „singen“.")])]),
+  SEC("Satzebene",[
+   KAP(8,"Umstellprobe","Ich kenne die Umstellprobe und kann Satzglieder erkennen.","2026-10-14",[
+    MC(1,"Wozu dient die Umstellprobe?",["um Satzglieder zu finden","um Kommas zu zählen","um Nomen großzuschreiben","um Reime zu finden"],"Was bleibt beim Umstellen zusammen?","Mit der Umstellprobe findest du die Satzglieder."),
+    OR(2,"Umstellprobe: Der Satz soll mit „Morgen“ beginnen.",["Morgen","fahren","wir","nach Freiburg"],"Das Prädikat bleibt an zweiter Stelle.","Morgen | fahren | wir | nach Freiburg. Das Prädikat bleibt an zweiter Stelle."),
+    MC(3,"Wie viele Satzglieder hat der Satz „Am Abend erzählt der Opa eine spannende Sage.“?",["4","5","7","3"],"Probiere die Umstellprobe aus.","Am Abend | erzählt | der Opa | eine spannende Sage – vier Satzglieder.")]),
+   KAP(9,"Prädikat","Ich erkenne das Prädikat im Satz.","2026-10-21",[
+    MC(1,"„Die Katze schläft.“ Welches Satzglied ist „schläft“?",["Prädikat","Subjekt","Akkusativobjekt","adverbiale Bestimmung"],"Das Satzglied, das aus dem Verb besteht.","„schläft“ ist das Prädikat."),
+    MK(2,"Tippe das Prädikat an.","Der Opa|*erzählt|eine Geschichte.","Was tut der Opa?","„erzählt“ ist das Prädikat."),
+    TF(3,"Im Aussagesatz steht das Prädikat an zweiter Stelle.",true,"Probiere die Umstellprobe.","Richtig. Egal wie du umstellst – das Prädikat bleibt an zweiter Stelle.")]),
+   KAP(10,"Das Subjekt","Ich erkenne das Subjekt im Satz.","2026-11-02",[
+    MC(1,"Mit welcher Frage findest du das Subjekt?",["Wer oder was?","Wem?","Wen oder was?","Wann?"],"Wer oder was tut etwas?","Das Subjekt findest du mit „Wer oder was?“."),
+    MK(2,"Tippe das Subjekt an.","Am Morgen|füttert|*die Bäuerin|die Hühner.","Wer füttert?","„die Bäuerin“ ist das Subjekt."),
+    MK(3,"Tippe das Subjekt an.","Im Garten|spielen|*die Kinder|Fußball.","Wer spielt?","„die Kinder“ – das Subjekt steht hier hinter dem Prädikat.")]),
+   KAP(11,"Das Akkusativobjekt","Ich erkenne das Akkusativobjekt im Satz.","2026-11-02",[
+    MC(1,"Mit welcher Frage findest du das Akkusativobjekt?",["Wen oder was?","Wem?","Wer oder was?","Wo?"],"Akkusativ – wen?","„Wen oder was?“ fragt nach dem Akkusativobjekt."),
+    MK(2,"Tippe das Akkusativobjekt an.","Der Junge|schenkt|seiner Oma|*einen Blumenstrauß.","Wen oder was schenkt der Junge?","„einen Blumenstrauß“ ist das Akkusativobjekt."),
+    MK(3,"Tippe das Akkusativobjekt an.","*Den Drachen|besiegt|der Ritter.","Wer besiegt wen?","„Den Drachen“ – Wen besiegt der Ritter? Das Akkusativobjekt steht hier vorn.")]),
+   KAP(12,"Das Dativobjekt","Ich erkenne das Dativobjekt im Satz.","2026-11-04",[
+    MC(1,"Mit welcher Frage findest du das Dativobjekt?",["Wem?","Wen oder was?","Wer oder was?","Wann?"],"Dativ – wem?","„Wem?“ fragt nach dem Dativobjekt."),
+    MK(2,"Tippe das Dativobjekt an.","Der Junge|schenkt|*seiner Oma|einen Blumenstrauß.","Wem schenkt der Junge etwas?","„seiner Oma“ ist das Dativobjekt."),
+    MK(3,"Tippe das Dativobjekt an.","*Der Lehrerin|bringt|das Kind|einen Apfel.","Wem bringt das Kind etwas?","„Der Lehrerin“ – Wem? Das Dativobjekt steht hier vorn.")]),
+   KAP(13,"Die adverbiale Bestimmung","Ich erkenne adverbiale Bestimmungen im Satz.","2026-11-06",[
+    MC(1,"Mit welcher Frage findest du eine adverbiale Bestimmung der Zeit?",["Wann?","Wo?","Wem?","Wer?"],"Zeit hat etwas mit der Uhr zu tun.","Adverbiale Bestimmung der Zeit: Wann? Wie lange? Seit wann?"),
+    MK(2,"Tippe die adverbiale Bestimmung des Ortes an.","Nach der Schule|spielen|die Kinder|*im Park|Fußball.","Frage: Wo spielen die Kinder?","„im Park“ – Wo? „Nach der Schule“ sagt, wann."),
+    SO(3,"Ordne die adverbialen Bestimmungen zu.",["Zeit","Ort","Art und Weise"],[["am Morgen",0],["im Wald",1],["sehr schnell",2],["nach der Schule",0],["auf dem Felsen",1],["mit großer Freude",2]],"Wann? – Wo? – Wie?","Zeit: am Morgen, nach der Schule. Ort: im Wald, auf dem Felsen. Art und Weise: sehr schnell, mit großer Freude.")])])]}]}
+]},
+{id:"9d",name:"Klasse 9d",color:"#4f816d",faecher:[
+ {id:"d",name:"Deutsch",icon:"book",color:"#4f816d",units:[
+  {id:"9d-a2",titel:"A2: Materialgestützte Argumentation und dass / das",ziel:"Ich kann eine materialgestützte Argumentation schreiben. Ich kenne die Regeln der Kommasetzung. Ich kann dass und das korrekt anwenden.",prefix:"A2",ka:{d:"2027-01-29",txt:"Klassenarbeit",geplant:true},sections:[
+  SEC("Argumente verstehen und aufbauen",[
+   KAP(1,"Meine Meinung schriftlich begründen","Ich kann Argumente formulieren und meine Meinung schriftlich begründen.","2026-11-18",[
+    MC(1,"Was gehört zu einer schriftlichen Stellungnahme?",["Deine Meinung und eine Begründung, warum du sie hast","Nur deine Meinung in einem Satz","Eine Nacherzählung des Themas","Eine Liste mit Fragen"],"Eine Meinung allein überzeugt noch niemanden.","Eine Stellungnahme nennt deine Meinung und begründet sie."),
+    TF(1,"Eine Meinung ohne Begründung überzeugt die Leser:innen meistens nicht.",true,"Würde dich „Ich finde das blöd.“ überzeugen?","Richtig. Erst die Begründung macht eine Meinung nachvollziehbar."),
+    MC(1,"Mit welchem Wort leitest du eine Begründung ein?",["weil","obwohl","trotzdem","aber"],"Welches Wort beantwortet die Frage „Warum?“","„weil“ (oder „denn“) leitet eine Begründung ein."),
+    SO(2,"Tatsache oder Meinung?",["Tatsache","Meinung"],[["Eine Schulstunde dauert 45 Minuten.",0],["Die Schule beginnt viel zu früh.",1],["Die Schule beginnt um 7:45 Uhr.",0],["Ich finde, wir brauchen längere Pausen.",1],["Busfahren ist langweilig.",1],["Der Bus fährt alle 30 Minuten.",0]],"Eine Tatsache kann man überprüfen. Eine Meinung ist eine Bewertung.","Tatsachen lassen sich nachprüfen. Wörter wie „zu früh“ oder „langweilig“ zeigen eine Bewertung."),
+    OR(2,"Bringe die Teile einer Stellungnahme in eine sinnvolle Reihenfolge.",["Thema und Anlass nennen","eigene Meinung nennen","Argumente mit Begründungen und Beispielen","Fazit: Meinung noch einmal bekräftigen"],"Einleitung – Hauptteil – Schluss.","Einleitung (Thema, Meinung), Hauptteil (Argumente), Schluss (Fazit)."),
+    MC(3,"Welche Begründung überzeugt am meisten für „Die Schule sollte später beginnen“?",["Jugendliche sind morgens oft noch müde und können sich deshalb schlechter konzentrieren.","Ich habe keine Lust, früh aufzustehen.","Das sagen alle in meiner Klasse.","Es wäre einfach cooler."],"Eine gute Begründung betrifft viele und ist sachlich.","Die erste Begründung ist sachlich und betrifft alle Schüler:innen. Die anderen sind persönlich oder ohne Begründung."),
+    FR(3,"Nimm in zwei bis drei Sätzen Stellung: Sollte es an deiner Schule einen Kiosk mit gesunden Snacks geben?","Ich bin für einen Kiosk mit gesunden Snacks, weil viele Schüler:innen ohne Frühstück in die Schule kommen und sich dann schlecht konzentrieren können. Ein Obstbecher oder ein Vollkornbrötchen in der großen Pause würde helfen, bis zum Mittag fit zu bleiben. Deshalb sollte die Schule das Angebot einführen.","Meinung + Begründung + Beispiel.")]),
+   KAP(2,"Argumente ordnen","Ich kann Pro- und Contra-Argumente ordnen.","2026-11-18",[
+    HA_SORT(1),
+    TF(1,"In einer steigernden Argumentation steht das stärkste Argument am Ende.",true,"„steigern“ heißt: es wird immer mehr.","Richtig. Das stärkste Argument bildet den Höhepunkt."),
+    MC(2,"In welcher Reihenfolge ordnest du Argumente in einer überzeugenden Argumentation meistens?",["vom schwächsten zum stärksten Argument","vom stärksten zum schwächsten Argument","alphabetisch","in zufälliger Reihenfolge"],"Was soll den Leser:innen am Ende im Kopf bleiben?","Steigernd: Das stärkste Argument kommt zum Schluss, damit es im Gedächtnis bleibt."),
+    SO(2,"Thema: Handyverbot in der Pause. Pro oder Contra?",["Pro Verbot","Contra Verbot"],[["Schüler:innen bewegen sich in der Pause mehr.",0],["Man kann die Eltern im Notfall nicht erreichen.",1],["Es gibt weniger Cybermobbing während der Schulzeit.",0],["Jugendliche sollen lernen, selbst Verantwortung zu übernehmen.",1],["Die Schüler:innen unterhalten sich mehr miteinander.",0],["Das Handy wird auch für Lern-Apps genutzt.",1]],"Frage dich bei jedem Satz: Spricht das für oder gegen ein Verbot?","Pro: Bewegung, weniger Cybermobbing, mehr Gespräche. Contra: Notfall, Eigenverantwortung, Lern-Apps."),
+    MC(3,"Wann ist ein Argument besonders stark?",["Wenn es viele Menschen betrifft und gut belegt ist","Wenn es besonders lang ist","Wenn es laut vorgetragen wird","Wenn es ein Fremdwort enthält"],"Denk an Begründung und Beleg.","Starke Argumente sind relevant für viele und durch Fakten oder Beispiele belegt."),
+    FR(3,"Wähle drei Pro-Argumente für Hausaufgaben und ordne sie steigernd. Begründe kurz, warum das letzte am stärksten ist.","1. Man lernt, selbstständig zu arbeiten.\n2. Durch Hausaufgaben wiederholt man die Themen des Unterrichts.\n3. Hausaufgaben bereiten auf Klassenarbeiten vor.\nDas letzte ist am stärksten, weil es direkt mit besseren Leistungen zu tun hat und alle betrifft.","Schwächstes zuerst, stärkstes zuletzt.")]),
+   KAP(3,"Aufbau eines Arguments","Ich kenne den Aufbau eines Arguments und unterscheide Behauptung, Begründung und Beispiel.","2026-11-20",[
+    OR(1,"Bringe die Teile eines Arguments in die richtige Reihenfolge.",["Behauptung","Begründung","Beispiel"],"Zuerst sagst du, was du denkst.","Behauptung – Begründung – Beispiel."),
+    MA(1,"Ordne zu.",[["Behauptung","Das willst du beweisen."],["Begründung","Damit erklärst du, warum die Behauptung stimmt."],["Beispiel","Damit zeigst du die Begründung an einem konkreten Fall."]],"Die Begründung beantwortet „Warum?“.","Behauptung = These, Begründung = Warum?, Beispiel = konkreter Fall."),
+    MC(1,"Welche Formulierung leitet oft ein Beispiel ein?",["beispielsweise","weil","deshalb","obwohl"],"Das Wort steckt fast schon im Namen.","„beispielsweise“ oder „zum Beispiel“ leiten ein Beispiel ein."),
+    SO(2,"Ordne die Teile den Bausteinen zu.",["Behauptung","Begründung","Beispiel"],[["Schuluniformen stärken die Klassengemeinschaft,",0],["weil niemand wegen seiner Kleidung ausgegrenzt wird.",1],["So muss sich beispielsweise niemand für ältere Turnschuhe schämen.",2],["Jugendliche können sich schlechter konzentrieren,",0],["denn kurze Videos gewöhnen das Gehirn an schnelle Reize.",1],["Zum Beispiel fällt es vielen schwer, einen langen Text am Stück zu lesen.",2]],"Achte auf die Signalwörter: weil, denn, beispielsweise, zum Beispiel.","Es sind zwei vollständige Argumente: je eine Behauptung, eine Begründung (weil/denn) und ein Beispiel."),
+    MC(2,"Welcher Baustein fehlt? „Hausaufgaben sind sinnvoll, weil man den Stoff dadurch wiederholt.“",["das Beispiel","die Behauptung","die Begründung","nichts, es ist vollständig"],"Gibt es einen konkreten Fall?","Behauptung und Begründung sind da. Es fehlt ein Beispiel, z. B. Vokabeln, die man durch Wiederholen besser behält."),
+    MC(2,"Welches Beispiel passt? „Sport in der Schule ist wichtig, weil Bewegung die Gesundheit fördert.“",["Wer sich regelmäßig bewegt, hat beispielsweise seltener Rückenschmerzen.","Fußball ist eine beliebte Sportart.","Sportlehrer tragen oft Trainingsanzüge.","Die Turnhalle ist groß."],"Das Beispiel muss die Begründung (Gesundheit) zeigen.","Nur das erste Beispiel passt zur Begründung „Gesundheit“."),
+    MC(3,"Was ist der Unterschied zwischen Begründung und Beispiel?",["Die Begründung erklärt allgemein, warum etwas stimmt; das Beispiel zeigt einen konkreten Fall.","Es gibt keinen Unterschied.","Das Beispiel kommt immer vor der Begründung.","Die Begründung ist immer eine Zahl."],"Allgemein – konkret.","Begründung = allgemeine Erklärung. Beispiel = konkreter Fall, der die Begründung stützt."),
+    TF(3,"Ein Beispiel kann die Begründung ersetzen.",false,"Ein Einzelfall erklärt noch nicht, warum etwas allgemein gilt.","Falsch. Ein Beispiel stützt die Begründung, ersetzt sie aber nicht."),
+    FR(3,"Schreibe ein vollständiges Argument (Behauptung, Begründung, Beispiel) zum Thema: Soll das Schuljahr mit einer Projektwoche beginnen?","Eine Projektwoche zum Schuljahresbeginn ist sinnvoll, weil sich die Klasse dabei besser kennenlernt. So können zum Beispiel neue Mitschüler:innen beim gemeinsamen Planen eines Ausflugs schnell Anschluss finden.","Signalwörter: weil … / zum Beispiel …")]),
+   KAP(4,"Gegenargumente entkräften","Ich kann ein Gegenargument aufgreifen und entkräften.","2026-11-20",[
+    MC(1,"Was bedeutet „ein Gegenargument entkräften“?",["Ein Argument der Gegenseite aufgreifen und zeigen, warum es nicht überzeugt","Ein Gegenargument einfach weglassen","Der Gegenseite recht geben","Ein eigenes Argument wiederholen"],"„entkräften“ = die Kraft nehmen.","Du nennst das Gegenargument und zeigst, warum es schwächer ist als deine Position."),
+    GAP(1,"Wähle die passenden Wörter.","{0} lernt man mit Nachmittagsunterricht vielleicht mehr, {1} die Konzentration lässt am Nachmittag stark nach.",[["Zwar","Weil","Denn"],["aber","weil","also"]],"Eine typische Kombination zum Entkräften.","„Zwar …, aber …“: Du gibst etwas zu und schränkst es dann ein."),
+    MC(1,"Welche Formulierung leitet ein Gegenargument ein?",["Manche meinen, dass …","Zum Beispiel …","Deshalb …","Zusammenfassend …"],"Wer sagt hier etwas anderes als du?","„Manche meinen, dass …“ greift die Sicht der Gegenseite auf."),
+    OR(2,"Bringe die Schritte beim Entkräften in eine sinnvolle Reihenfolge.",["Gegenargument nennen","teilweise zustimmen","mit eigener Begründung entkräften","zur eigenen Position zurückkehren"],"Erst kommt die Gegenseite zu Wort.","Gegenargument – Zugeständnis – Entkräftung – Rückbezug auf die eigene Position."),
+    MC(2,"Gegenargument: „Mit Nachmittagsunterricht verbringt ihr weniger Zeit am Handy.“ Welche Entkräftung überzeugt am meisten?",["Zwar ist man in der Schule weniger am Handy, doch viele holen die Zeit am Abend nach – dann fehlt sogar Schlaf.","Das stimmt nicht.","Handys sind toll.","Das ist mir egal."],"Eine Entkräftung braucht eine Begründung.","Nur die erste Antwort gibt etwas zu und begründet, warum das Argument trotzdem nicht trägt."),
+    MA(2,"Ordne die Formulierungen ihrer Aufgabe zu.",[["Befürworter:innen behaupten, …","Gegenargument nennen"],["Es stimmt zwar, dass …","Zugeständnis"],["Dem ist entgegenzuhalten, dass …","Entkräftung"],["Daher bleibt festzuhalten, dass …","Schlussfolgerung"]],"Achte auf die Signalwörter „zwar“ und „entgegenhalten“.","So klingt eine sprachlich saubere Entkräftung."),
+    TF(2,"Beim Entkräften darfst du die Gegenseite ruhig lächerlich machen.",false,"Wie wirkt das auf Leser:innen?","Falsch. Bleib sachlich – sonst verlierst du an Glaubwürdigkeit."),
+    MC(3,"Welche Strategie nutzt dieser Satz? „Das gilt aber nur für einen kleinen Teil der Schüler:innen.“",["einschränken","widerlegen mit Gegenbeweis","zustimmen","ein Beispiel geben"],"Wird das Argument ganz bestritten oder nur kleiner gemacht?","Das Argument wird eingeschränkt: Es stimmt nur für wenige."),
+    TF(3,"Ein entkräftetes Gegenargument zeigt, dass du dich mit der anderen Seite beschäftigt hast.",true,"Was denkt der Leser über dich?","Richtig. Das macht deine Argumentation glaubwürdiger."),
+    FR(3,"Entkräfte dieses Gegenargument: „Schuluniformen sind zu teuer.“","Zwar kostet eine Schuluniform zunächst Geld, doch auf Dauer sparen Familien, weil sie weniger teure Markenkleidung für die Schule kaufen müssen. Außerdem könnte die Schule Zuschüsse für Familien anbieten, die sich die Kleidung nicht leisten können.","Zwar … doch … + Begründung.")])]),
+  SEC("Mit Material arbeiten",[
+   KAP(5,"Argumente aus einem Sachtext herausarbeiten","Ich kann mithilfe der 3-Schritt-Lesemethode aus einem Sachtext Argumente herausarbeiten.","2026-11-25",SACHTEXT_OEPNV()),
+   KAP(6,"Richtig zitieren","Ich kann auf Material verweisen und richtig zitieren.","2026-11-27",[
+    TF(1,"Bei einem wörtlichen Zitat setzt du Anführungszeichen.",true,"Woran erkennt man, dass etwas wörtlich übernommen ist?","Richtig. Und du nennst die Quelle, z. B. (M2, Z. 4)."),
+    MC(1,"Wie gibst du die Quelle eines Zitats an?",["(M2, Z. 7)","(irgendwo im Text)","(Internet)","(M2, irgendwo)"],"Material und Zeile.","Material und Zeile, z. B. (M2, Z. 7)."),
+    MC(1,"Was ist ein Verweis?",["Du gibst den Inhalt eines Materials in eigenen Worten wieder und nennst die Quelle.","Du schreibst einen Satz wörtlich ab.","Du erfindest eine Quelle.","Du lässt das Material weg."],"Verweisen = auf etwas zeigen.","Ein Verweis gibt den Inhalt sinngemäß wieder, z. B.: Laut M1 …"),
+    TF(1,"Beim Zitieren darfst du Wörter verändern, wenn es dann besser klingt.",false,"Zitat heißt: wörtlich.","Falsch. Ein Zitat bleibt wörtlich. Auslassungen kennzeichnest du mit […]."),
+    SO(2,"Zitat oder Verweis?",["Zitat","Verweis"],[["Laut M1 fahren viele Jugendliche mit dem Bus zur Schule.",1],["In M2 heißt es: „Der Bus kommt oft zu spät“ (M2, Z. 4).",0],["Wie die Grafik in M3 zeigt, steigen die Preise.",1],["„Viele Linien fahren nur stündlich“ (M1, Z. 12).",0]],"Sind Anführungszeichen da?","Zitate stehen in Anführungszeichen. Verweise geben den Inhalt mit eigenen Worten wieder."),
+    MC(2,"Wie kennzeichnest du eine Auslassung in einem Zitat?",["[…]","***","//","?!"],"Eckige Klammern.","Mit eckigen Klammern und drei Punkten: […]"),
+    MC(2,"Welche Formulierung leitet einen Verweis ein?",["Wie aus M2 hervorgeht, …","Ich finde, …","Zum Schluss …","Erstens …"],"Es muss ein Material genannt werden.","„Wie aus M2 hervorgeht“ verweist auf ein Material."),
+    OR(2,"Bringe die Bausteine eines Arguments mit Materialbeleg in eine sinnvolle Reihenfolge.",["Behauptung","Begründung","Beleg aus dem Material (Verweis oder Zitat)","Rückbezug auf die Behauptung"],"Der Beleg stützt die Begründung.","Behauptung – Begründung – Beleg – Rückbezug."),
+    MC(3,"Welcher Satz zitiert korrekt?",["In M1 heißt es, dass „viele Jugendliche […] auf das Elterntaxi angewiesen“ sind (M1, Z. 2).","In M1 heißt es, dass viele Jugendliche auf das Elterntaxi angewiesen sind.","In M1 heißt es: „Jugendliche brauchen immer ihre Eltern“ (M1, Z. 2).","„Viele Jugendliche […] Elterntaxi“"],"Anführungszeichen, Auslassung, Quelle – alles muss stimmen.","Nur der erste Satz hat Anführungszeichen, eine gekennzeichnete Auslassung und eine Quellenangabe."),
+    TF(3,"Für ein gutes Argument reicht ein Zitat – erklären musst du es nicht.",false,"Was soll der Leser mit dem Zitat anfangen?","Falsch. Ein Zitat musst du erläutern und mit deiner Behauptung verbinden."),
+    FR(3,"Material M1 (ausgedacht): „Auf dem Land fährt der Bus oft nur einmal pro Stunde. Viele Jugendliche sind deshalb auf das Elterntaxi angewiesen.“ Formuliere daraus ein Argument mit Verweis.","Der Busverkehr auf dem Land sollte ausgebaut werden, denn ohne gute Verbindungen sind Jugendliche von ihren Eltern abhängig. Wie M1 zeigt, fährt der Bus auf dem Land oft nur einmal pro Stunde, sodass viele auf das Elterntaxi angewiesen sind (vgl. M1, Z. 1–2). Ein dichterer Takt würde Jugendlichen also mehr Selbstständigkeit geben.","Behauptung – Begründung – „Wie M1 zeigt …“ – Rückbezug.")]),
+   KAP(7,"Operatoren","Ich kenne die Operatoren der Prüfung und weiß, was sie verlangen.","2026-12-02")]),
+  SEC("Richtig schreiben beim Argumentieren",[
+   KAP(8,"Kommasetzung in Satzgefügen","Ich kann Kommas in Satzgefügen korrekt setzen.","2026-12-04"),
+   KAP(9,"dass und das","Ich kann dass und das sicher unterscheiden.","2026-12-09"),
+   KAP(10,"Einen dass-Satz in eine Infinitivgruppe umwandeln","Ich kann einen dass-Satz in eine Infinitivgruppe umwandeln.","2026-12-11"),
+   KAP(11,"Parenthese","Ich kann eine Parenthese erkennen und mit Kommas abtrennen.","2026-12-11")]),
+  SEC("Eine Argumentation schreiben",[
+   KAP(12,"Aufbau einer Argumentation","Ich kenne den Aufbau einer materialgestützten Argumentation.","2026-12-16"),
+   KAP(13,"Eine Argumentation planen, schreiben und überarbeiten","Ich kann eine Argumentation planen, schreiben und überarbeiten.","2027-01-15"),
+   KAP(14,"Prüfungsaufgabe","Ich kann eine vollständige Prüfungsaufgabe bearbeiten.","2027-01-22")])]}]},
+ {id:"gk",name:"Gemeinschaftskunde",icon:"landmark",color:"#7867b7",units:[
+  {id:"9d-pw",titel:"Politischer Willensbildungsprozess",ziel:"Ich kann beschreiben, welche Möglichkeiten ich habe, meine Interessen in den politischen Entscheidungsprozess einzubringen.",prefix:"Kapitel",ka:{d:null,txt:"Klassenarbeit"},sections:[
+  SEC("Politische Partizipation",[
+   KAP(1,"Politische Teilhabe – mehr als nur Wählen?","Ich kann beschreiben, was Partizipation ist.","2026-10-13",[
+    MC(1,"Was bedeutet politische Partizipation?",["sich an politischen Entscheidungen beteiligen","nur Nachrichten schauen","einer Sportart nachgehen","ein politisches Amt erben"],"Partizipation = Teilhabe.","Partizipation heißt, sich an Politik zu beteiligen – z. B. wählen, demonstrieren, Petitionen unterschreiben."),
+    TF(1,"Politische Partizipation besteht nur aus Wählen.",false,"Erinnere dich an die Meinungslinie.","Falsch. Auch Demonstrationen, Petitionen, Parteiarbeit oder Social Media gehören dazu."),
+    TF(2,"Das Grundgesetz garantiert das Recht, sich friedlich und ohne Waffen zu versammeln.",true,"Artikel 8.","Richtig. Das ist die Versammlungsfreiheit (Art. 8 GG)."),
+    MC(3,"Welches Recht nutzt du, wenn du dich mit einer Bitte an den Landtag wendest?",["Petitionsrecht","Wahlrecht","Versammlungsrecht","Hausrecht"],"Artikel 17 GG.","Das Petitionsrecht (Art. 17 GG) erlaubt Bitten und Beschwerden an Parlamente und Behörden.")]),
+   KAP(2,"Möglichkeiten der politischen Partizipation","Ich kenne Möglichkeiten, sich politisch zu engagieren.","2026-10-13",[
+    MA(1,"Ordne zu.",[["Petition","eine schriftliche Bitte oder Beschwerde an ein Parlament"],["Demonstration","eine öffentliche Versammlung für oder gegen etwas"],["Wahl","Abgeordnete für eine bestimmte Zeit bestimmen"],["Partei","eine Vereinigung, die politische Ziele verfolgt und bei Wahlen antritt"]],"Eine Petition schreibt man.","So kann man sich politisch einbringen."),
+    MC(2,"Welche Möglichkeit hast du schon mit 14 Jahren?",["eine Petition unterschreiben oder starten","bei der Bundestagswahl wählen","in den Bundestag gewählt werden","Bürgermeister:in werden"],"Für Petitionen gibt es keine Altersgrenze.","Petitionen kann jede und jeder einreichen – unabhängig vom Alter."),
+    FR(3,"Welche Form der Beteiligung passt am besten zu dir? Begründe in zwei Sätzen.","Beispiel: Mir passt eine Petition am besten, weil ich mich damit für ein konkretes Anliegen einsetzen kann, zum Beispiel für einen besseren Busanschluss. Außerdem kann ich online viele Unterstützer:innen sammeln, ohne schon wählen zu dürfen.","Form nennen + Begründung + Beispiel.")]),
+   KAP(3,"Alles fake? Fake News untersuchen","Ich kenne die Aufgaben, die Medien erfüllen.","2026-10-20",[
+    MC(1,"Warum nennt man Medien die „vierte Gewalt“?",["Weil sie Politik kontrollieren und Missstände öffentlich machen","Weil sie Gesetze beschließen","Weil sie Gerichte ersetzen","Weil sie die Polizei leiten"],"Die drei anderen Gewalten sind Gesetzgebung, Regierung und Gerichte.","Medien kontrollieren die drei Staatsgewalten, indem sie berichten und kritisieren."),
+    MA(2,"Ordne die Aufgaben der Medien zu.",[["Information","Die Nachrichten berichten über ein neues Gesetz."],["Meinungsbildung","Ein Kommentar stellt Pro und Contra zum Wahlalter 16 dar."],["Kritik und Kontrolle","Eine Zeitung deckt auf, dass Steuergeld verschwendet wurde."]],"Kontrolle = etwas aufdecken.","Information, Meinungsbildung, Kritik und Kontrolle sind die drei Hauptaufgaben."),
+    MC(2,"Woran erkennst du am ehesten eine Fake News?",["Sie nennt keine Quelle und erscheint nur auf einer einzigen Seite.","Sie steht in mehreren seriösen Zeitungen.","Sie hat ein Datum und eine Autorin.","Sie ist sachlich formuliert."],"Woran erkennst du seriöse Nachrichten?","Fehlende Quellen und keine Bestätigung durch andere Medien sind Warnsignale."),
+    SO(3,"Seriöser Hinweis oder Warnsignal?",["seriös","Warnsignal"],[["Impressum vorhanden",0],["reißerische Überschrift mit vielen Ausrufezeichen",1],["Autor:in und Datum sind angegeben",0],["kein Datum, keine Quelle",1],["Andere Nachrichtenseiten berichten dasselbe",0],["„Teile das sofort, bevor es gelöscht wird!“",1]],"Wer zeigt, wer er ist – und wer setzt dich unter Druck?","Druck, fehlende Quellen und Übertreibung sind Warnsignale.")]),
+   KAP(4,"Eignet sich TikTok zur politischen Information?","Ich kann beurteilen, ob TikTok sich eignet, um sich politisch zu informieren.","2026-10-20",[
+    TF(1,"Der TikTok-Algorithmus zeigt dir vor allem Inhalte, die dir wahrscheinlich gefallen.",true,"Warum ist die „Für dich“-Seite so persönlich?","Richtig. Deshalb sieht man oft immer mehr vom Gleichen."),
+    MC(2,"Was ist ein Risiko, wenn man sich nur über TikTok informiert?",["Man sieht oft einseitige Inhalte und kaum andere Meinungen.","Die Videos sind zu lang.","TikTok ist in Deutschland verboten.","Man bekommt zu viele Zeitungsartikel."],"Denk an den Algorithmus.","Einseitige Inhalte und Falschinformationen verbreiten sich schnell."),
+    FR(3,"Eignet sich TikTok, um sich politisch zu informieren? Nenne ein Argument und eine Einschränkung.","Argument: TikTok erreicht viele Jugendliche und kann politische Themen kurz und verständlich erklären.\nEinschränkung: Der Algorithmus zeigt oft einseitige Inhalte, und Falschinformationen verbreiten sich schnell. Deshalb sollte man Informationen mit seriösen Quellen vergleichen.","Pro + Einschränkung (aber …).")])]),
+  SEC("Parteien",[
+   KAP(5,"Wie ist die Arbeit in einer Partei?","Ich kenne die Aufgaben, die Parteimitglieder erfüllen.","2026-11-10",[
+    MC(1,"Was steht in Artikel 21 des Grundgesetzes über Parteien?",["Sie wirken bei der politischen Willensbildung des Volkes mit.","Sie schreiben alle Gesetze allein.","Sie sprechen Urteile vor Gericht.","Es darf nur eine Partei geben."],"„mitwirken“ ist das Schlüsselwort.","Art. 21 GG: Die Parteien wirken bei der politischen Willensbildung des Volkes mit."),
+    TF(1,"Parteien stellen Kandidat:innen für Wahlen auf.",true,"Wer steht auf dem Stimmzettel?","Richtig. Das ist eine ihrer wichtigsten Aufgaben."),
+    MC(1,"Was ist ein Wahlprogramm?",["Die Ziele, die eine Partei nach der Wahl umsetzen will","Der Ablauf am Wahltag","Eine Liste aller Wähler:innen","Ein Fernsehprogramm"],"Es geht um Pläne.","Im Wahlprogramm stehen die Ziele einer Partei."),
+    TF(1,"Wer Mitglied einer Partei ist, muss Berufspolitiker:in werden.",false,"Die meisten Mitglieder haben einen ganz normalen Beruf.","Falsch. Die meisten Parteimitglieder engagieren sich ehrenamtlich."),
+    SO(2,"Ist das eine Aufgabe von Parteien?",["ja","nein"],[["Interessen von Bürger:innen bündeln",0],["Kandidat:innen für Wahlen aufstellen",0],["Gerichtsurteile fällen",1],["über politische Themen informieren",0],["Steuern einziehen",1],["eine Regierung bilden oder als Opposition kontrollieren",0]],"Gerichte und Finanzämter sind keine Parteien.","Parteien bündeln Interessen, stellen Kandidat:innen auf, informieren und bilden Regierung oder Opposition."),
+    MC(2,"Was machen Parteimitglieder in einem Ortsverband NICHT?",["Gesetze im Bundestag beschließen","Infostände in der Fußgängerzone betreuen","bei Versammlungen über Ziele abstimmen","Plakate im Wahlkampf aufhängen"],"Wer sitzt im Bundestag?","Gesetze beschließen nur die gewählten Abgeordneten im Parlament."),
+    MC(2,"Junge Union, Jusos, Grüne Jugend und Junge Liberale sind …",["Jugendorganisationen von Parteien","Fußballvereine","Schülerzeitungen","Gewerkschaften"],"Junge Leute, die einer Partei nahestehen.","Das sind Jugendorganisationen von Parteien."),
+    TF(2,"Parteien finanzieren sich unter anderem durch Mitgliedsbeiträge, Spenden und staatliche Zuschüsse.",true,"Woher kommt das Geld für Plakate und Büros?","Richtig. Diese drei Quellen sind die wichtigsten."),
+    MC(3,"Was unterscheidet eine Partei von einer Bürgerinitiative?",["Eine Partei tritt bei Wahlen an und will dauerhaft Verantwortung übernehmen; eine Bürgerinitiative setzt sich meist für ein einzelnes Anliegen ein.","Es gibt keinen Unterschied.","Eine Bürgerinitiative sitzt im Bundestag.","Parteien kümmern sich nur um ein einziges Thema."],"Denk an Wahlen und an die Zahl der Themen.","Parteien haben Programme zu vielen Themen und treten bei Wahlen an."),
+    MC(3,"Was ist die Aufgabe der Opposition?",["Die Regierung kontrollieren und Alternativen vorschlagen","Die Regierung immer unterstützen","Gesetze allein beschließen","Wahlen organisieren"],"Opposition = Gegenposition.","Die Opposition kontrolliert und kritisiert die Regierung und macht eigene Vorschläge."),
+    FR(3,"Nenne zwei Gründe, warum sich Jugendliche in einer Partei engagieren könnten, und einen Grund, warum viele es nicht tun.","Gründe dafür: Man kann bei Themen mitreden, die einen selbst betreffen (z. B. Schule, Klima, Busverkehr), und man lernt, wie Politik funktioniert.\nGrund dagegen: Parteiarbeit kostet viel Zeit, und viele Jugendliche finden Parteien weit weg von ihrem Alltag.","Denk an Mitbestimmung, Lernen, Zeit.")])]),
+  SEC("Wahlen",[
+   KAP(6,"Wahlgrundsätze","Ich kenne die Wahlgrundsätze.","2026-11-17",[
+    MC(1,"Wie viele Wahlgrundsätze nennt Artikel 38 des Grundgesetzes?",["fünf","drei","vier","sechs"],"allgemein, unmittelbar, …","Fünf: allgemein, unmittelbar, frei, gleich und geheim."),
+    MA(1,"Ordne jedem Wahlgrundsatz seine Bedeutung zu.",[["allgemein","Alle Staatsbürger:innen ab einem Mindestalter dürfen wählen."],["unmittelbar","Die Abgeordneten werden direkt gewählt, ohne Zwischenpersonen."],["frei","Niemand darf zu einer bestimmten Wahl gezwungen werden."],["gleich","Jede Stimme zählt gleich viel."],["geheim","Niemand darf erfahren, wen du gewählt hast."]],"„gleich“ hat mit dem Gewicht der Stimme zu tun.","So schützt das Grundgesetz faire Wahlen."),
+    TF(1,"„Geheim“ bedeutet: Niemand darf herausfinden, wen du gewählt hast.",true,"Wozu gibt es die Wahlkabine?","Richtig. Deshalb wählt man in der Wahlkabine."),
+    SO(2,"Welcher Wahlgrundsatz wird verletzt?",["allgemein","unmittelbar","frei","gleich","geheim"],[["Nur Menschen mit hohem Einkommen dürfen wählen.",0],["Die Bürger:innen wählen Wahlleute, die dann die Abgeordneten bestimmen.",1],["Der Chef sagt seinen Angestellten, wen sie wählen müssen.",2],["Die Stimme von Rentner:innen zählt nur halb.",3],["Alle müssen ihren Stimmzettel offen vorzeigen.",4]],"Lies noch einmal die Bedeutungen der fünf Grundsätze.","Einkommen → allgemein; Wahlleute → unmittelbar; Zwang → frei; halbe Stimme → gleich; offen zeigen → geheim."),
+    MC(2,"„Gleiche Wahl“ bedeutet …",["Jede Stimme hat das gleiche Gewicht.","Alle wählen dieselbe Partei.","Alle wählen am selben Tag.","Jede Partei hat gleich viele Kandidat:innen."],"Es geht um das Gewicht.","Gleich: Jede Stimme zählt gleich viel."),
+    TF(2,"In Deutschland gibt es eine Wahlpflicht.",false,"Denk an den Grundsatz „frei“.","Falsch. Zur freien Wahl gehört auch, dass man nicht wählen muss."),
+    FR(3,"Jemand schlägt vor: Wer über 80 ist, soll nicht mehr wählen dürfen. Welcher Wahlgrundsatz wäre verletzt? Begründe.","Verletzt wäre die allgemeine Wahl. Sie bedeutet, dass alle Staatsbürger:innen ab dem Mindestalter wählen dürfen. Ein Höchstalter würde eine ganze Gruppe ausschließen – nur wegen ihres Alters.","Wer darf wählen?")]),
+   KAP(7,"Wahlen ab 16","Ich kann erläutern, ob Wahlen ab 16 sein sollten.","2026-11-17",[
+    MC(1,"Ab welchem Alter darf man bei der Bundestagswahl wählen?",["18","16","14","21"],"Volljährigkeit.","Bei der Bundestagswahl darf man ab 18 wählen."),
+    TF(2,"In Baden-Württemberg darf man bei der Landtagswahl schon ab 16 wählen.",true,"Die Landtagswahl im März 2026 war die erste mit dieser Regel.","Richtig. Das hat der Landtag 2022 beschlossen. Bei Kommunalwahlen in BW gilt das schon seit 2014."),
+    SO(2,"Wahlen ab 16: Pro oder Contra?",["Pro","Contra"],[["Jugendliche sind von heutigen Entscheidungen noch lange betroffen, z. B. beim Klimaschutz.",0],["Viele 16-Jährige interessieren sich noch wenig für Politik.",1],["Wer früh wählt, gewöhnt sich ans Wählen.",0],["Mit 16 ist man noch nicht volljährig.",1],["Jugendliche können leichter beeinflusst werden, etwa über Social Media.",1],["Die Politik würde Themen junger Menschen stärker beachten.",0]],"Frage dich jeweils: Spricht das für oder gegen eine Wahl ab 16?","Pro: Betroffenheit, Gewöhnung, mehr Beachtung. Contra: wenig Interesse, nicht volljährig, Beeinflussbarkeit."),
+    MC(3,"Bei welcher Wahl dürfen 16-Jährige seit 2024 in ganz Deutschland wählen?",["bei der Europawahl","bei der Bundestagswahl","bei der Bundespräsidentenwahl","bei keiner Wahl"],"Es geht um das Parlament der EU.","Seit 2024 gilt bei der Europawahl in Deutschland das Wahlalter 16."),
+    FR(3,"Sollte das Wahlalter bei Bundestagswahlen auf 16 sinken? Nenne ein Argument für deine Position und entkräfte ein Gegenargument.","Beispiel: Das Wahlalter sollte auf 16 sinken, weil Jugendliche von heutigen Entscheidungen am längsten betroffen sind. Zwar sagen manche, 16-Jährige interessierten sich kaum für Politik, doch wer früh wählen darf, beschäftigt sich auch eher damit – das zeigen die Landtagswahlen ab 16.","Argument + „Zwar …, doch …“.")]),
+   KAP(8,"Wahlen – wie erreicht man Wähler:innen?","Ich kann beschreiben, wie Parteien Menschen überzeugen.","2026-11-24",[
+    MC(1,"Wie nennt man die Zeit vor einer Wahl, in der Parteien um Stimmen werben?",["Wahlkampf","Wahlpause","Wahlpflicht","Wahlgeheimnis"],"Es wird um Stimmen „gekämpft“.","Im Wahlkampf werben Parteien um Stimmen."),
+    TF(1,"Wahlplakate gehören zu den klassischen Mitteln im Wahlkampf.",true,"Was hängt vor Wahlen an Laternen?","Richtig."),
+    MC(1,"Was steht typischerweise auf einem Wahlplakat?",["Ein kurzer Slogan, ein Foto und der Name der Partei","Das ganze Wahlprogramm","Die Ergebnisse der letzten Wahl","Die Telefonnummer aller Kandidat:innen"],"Plakate muss man im Vorbeigehen lesen können.","Plakate sind kurz: Slogan, Bild, Partei."),
+    MC(1,"Was ist ein Slogan?",["ein kurzer, einprägsamer Werbespruch","ein langes Interview","eine Abstimmung","ein Gesetz"],"Ein Satz, den man sich merkt.","Ein Slogan ist ein kurzer Werbespruch."),
+    MA(2,"Ordne die Wahlkampfmittel zu.",[["Infostand","Parteimitglieder sprechen in der Fußgängerzone mit Bürger:innen."],["Wahlwerbespot","kurzer Werbefilm im Fernsehen oder im Internet"],["TV-Duell","Spitzenkandidat:innen diskutieren live im Fernsehen."],["Social-Media-Kampagne","kurze Videos und Posts für junge Zielgruppen"]],"Denk daran, wo du das jeweils siehst.","Parteien nutzen viele Kanäle, um unterschiedliche Gruppen zu erreichen."),
+    MC(2,"Warum setzen Parteien heute stark auf TikTok und Instagram?",["Weil sie dort junge Menschen erreichen, die kaum Zeitung lesen oder fernsehen","Weil Plakate verboten sind","Weil es Pflicht ist","Weil dort nur Politiker:innen sind"],"Wo sind junge Leute unterwegs?","Junge Menschen informieren sich oft über Social Media."),
+    TF(2,"Der Wahl-O-Mat wird von einer Partei herausgegeben.",false,"Er soll neutral sein.","Falsch. Der Wahl-O-Mat kommt von der Bundeszentrale für politische Bildung."),
+    TF(2,"Wahlplakate erklären meistens ausführlich das ganze Wahlprogramm.",false,"Wie lange schaust du auf ein Plakat?","Falsch. Plakate vereinfachen stark."),
+    SO(3,"Neutrale Information oder Werbung einer Partei?",["Information","Werbung"],[["Wahl-O-Mat",0],["Wahlplakat einer Partei",1],["Nachrichtenbericht über das TV-Duell",0],["Werbevideo einer Partei auf TikTok",1],["Flyer vom Infostand einer Partei",1]],"Wer hat das gemacht – und mit welchem Ziel?","Werbung will überzeugen. Neutrale Information will informieren."),
+    MC(3,"Was ist an Wahlwerbung kritisch zu sehen?",["Sie zeigt meist nur die Stärken der eigenen Partei und vereinfacht stark.","Sie ist immer gelogen.","Sie ist verboten.","Sie ist zu lang."],"Würde eine Partei ihre Schwächen zeigen?","Werbung ist einseitig. Deshalb lohnt sich ein Vergleich, z. B. mit dem Wahl-O-Mat."),
+    FR(3,"Entwirf einen Slogan für eine ausgedachte Partei, die sich für bessere Busverbindungen auf dem Land einsetzt. Wen willst du damit erreichen?","Beispiel: „Bus statt Elterntaxi – frei unterwegs!“\nZielgruppe: Jugendliche und Eltern auf dem Land, die viel Zeit mit Fahrdiensten verbringen.","Kurz, einprägsam, mit einem klaren Versprechen.")])]),
+  SEC("Extremismus",[
+   KAP(9,"Was ist politischer Extremismus?","Ich kann beschreiben, was politischer Extremismus ist.","2026-12-01"),
+   KAP(10,"Rechtsextremismus","Ich kann beschreiben, was Rechtsextremismus ist und welche Gefahr davon ausgeht.","2026-12-01")]),
+  SEC("Lernnachweis",[
+   KAP(11,"Extremistische Gruppen","Ich kenne extremistische Gruppen und kann eine davon genauer beschreiben.","2026-12-08")])]}]}
+]},
+{id:"10d",name:"Klasse 10d",color:"#347c83",faecher:[
+ {id:"d",name:"Deutsch",icon:"book",color:"#347c83",units:[
+  {id:"10d-a2",titel:"A2 (10): Materialgestützte Argumentation und dass / das",ziel:"Ich kann eine materialgestützte Argumentation schreiben. Ich kenne die Regeln der Kommasetzung. Ich kann dass und das korrekt anwenden.",prefix:"A2(10)",ka:{d:"2026-12-18",txt:"Klassenarbeit",geplant:false},sections:[
+  SEC("Neuerungen",[
+   KAP(1,"Unterschied Erörterung ← → Argumentation","Ich kenne den Unterschied zwischen einer Erörterung und der materialgestützten Argumentation.","2026-11-17",[
+    MC(1,"Was ist das wichtigste Merkmal einer materialgestützten Argumentation?",["Du belegst deine Argumente mit Informationen aus vorgegebenen Materialien.","Du schreibst nur aus deinem eigenen Wissen.","Du erzählst eine Geschichte.","Du fasst einen Text zusammen."],"Der Name verrät es.","Materialgestützt: Die Argumente werden mit M1, M2 … belegt."),
+    SO(1,"Typisch für die Erörterung oder für die materialgestützte Argumentation?",["Erörterung","Materialgestützte Argumentation"],[["Die Argumente stammen vor allem aus dem eigenen Wissen.",0],["Die Argumente werden mit Verweisen auf M1 bis M4 belegt.",1],["Der Text richtet sich an einen bestimmten Adressaten, z. B. die Schulleitung.",1],["Pro und Contra werden abgewogen, am Ende steht ein Urteil.",0],["Die Textform ist vorgegeben, z. B. ein Leserbrief.",1]],"Denk an Materialien, Adressat und Textform.","Die Erörterung wägt aus eigenem Wissen ab. Die materialgestützte Argumentation nutzt Materialien und hat Adressat und Textform."),
+    TF(1,"Bevor du schreibst, wertest du die Materialien gründlich aus.",true,"Woher kommen deine Belege?","Richtig. Erst auswerten, dann planen, dann schreiben."),
+    OR(2,"Bringe den Schreibprozess in die richtige Reihenfolge.",["Aufgabe und Operator genau lesen","Materialien auswerten und markieren","Schreibplan mit Argumenten erstellen","Text schreiben","Text überarbeiten"],"Erst verstehen, dann sammeln, dann planen.","Lesen – auswerten – planen – schreiben – überarbeiten."),
+    TF(2,"In einer einseitigen Argumentation kannst du trotzdem ein Gegenargument aufgreifen und entkräften.",true,"Das kommt in Kapitel 4.","Richtig. Das macht die eigene Position glaubwürdiger."),
+    FR(3,"Erkläre in zwei bis drei Sätzen den Unterschied zwischen einer Erörterung und einer materialgestützten Argumentation.","Bei einer Erörterung wägst du Pro und Contra zu einer Frage vor allem mit eigenem Wissen ab und kommst zu einem Urteil. Bei einer materialgestützten Argumentation wertest du vorgegebene Materialien aus und belegst deine Argumente mit Verweisen oder Zitaten. Außerdem schreibst du für einen bestimmten Adressaten in einer vorgegebenen Textform.","Materialien, Adressat, Textform.")])]),
+  SEC("Argumente",[
+   KAP(2,"Argumente ordnen","Ich kann Pro- und Contra-Argumente ordnen.","2026-11-17",[
+    MC(1,"Nach welchem Prinzip ordnest du Argumente meistens?",["steigernd: das stärkste zum Schluss","fallend: das stärkste zuerst","nach Länge","alphabetisch"],"Was bleibt am Ende im Kopf?","Steigernd – das stärkste Argument wirkt am Schluss am meisten."),
+    HA_SORT(1),
+    MC(2,"Thema: längere Mittagspause. Welches Argument wirkt bei der Schulleitung am stärksten?",["Mit einer längeren Pause können alle in Ruhe essen und sind am Nachmittag konzentrierter.","Wir hätten mehr Zeit zum Zocken.","Andere Schulen haben das auch.","Ich mag kurze Pausen nicht."],"Was ist für die Schulleitung wichtig?","Das erste Argument betrifft das Lernen – das interessiert die Schulleitung."),
+    MC(3,"Warum steht das stärkste Argument am Schluss?",["Weil es den Leser:innen am besten im Gedächtnis bleibt","Weil es am kürzesten ist","Weil man es sonst vergisst","Weil es die Regel so will"],"Denk an das Ende eines Films.","Was zuletzt kommt, wirkt nach."),
+    FR(3,"Wähle drei Pro-Argumente für Hausaufgaben und ordne sie steigernd. Begründe kurz, warum das letzte am stärksten ist.","1. Man lernt, selbstständig zu arbeiten.\n2. Durch Hausaufgaben wiederholt man die Themen des Unterrichts.\n3. Hausaufgaben bereiten auf Klassenarbeiten vor.\nDas letzte ist am stärksten, weil es direkt mit besseren Leistungen zu tun hat und alle betrifft.","Schwächstes zuerst, stärkstes zuletzt.")]),
+   KAP(3,"Aufbau eines Arguments","Ich kenne den Aufbau eines Arguments und unterscheide Behauptung, Begründung und Beispiel.","2026-11-20",[
+    OR(1,"Bringe die Bausteine eines Arguments in die richtige Reihenfolge.",["Behauptung","Begründung","Beispiel oder Beleg"],"Was willst du zeigen – warum – woran sieht man es?","Behauptung – Begründung – Beispiel/Beleg."),
+    MC(1,"Welcher Satz ist eine Behauptung?",["Ein Handyverbot an Schulen ist nicht sinnvoll.","Zum Beispiel nutzen viele Lern-Apps.","…, weil Jugendliche Medienkompetenz lernen müssen.","Wie M2 zeigt, …"],"Die Behauptung ist die These, die du beweisen willst.","Die Behauptung ist die These. Die anderen sind Beispiel, Begründung und Beleg."),
+    SO(2,"Ordne die Teile den Bausteinen zu.",["Behauptung","Begründung","Beispiel"],[["Ein kostenloser ÖPNV entlastet die Umwelt,",0],["weil mehr Menschen das Auto stehen lassen.",1],["In manchen Städten fahren mit Gratis-Tickets beispielsweise deutlich mehr Menschen Bus.",2],["Schulbeginn um neun Uhr verbessert die Leistungen,",0],["denn Jugendliche sind morgens oft unausgeschlafen.",1],["So schreiben viele in der ersten Stunde schlechter als in der dritten.",2]],"Signalwörter: weil, denn, beispielsweise, so …","Zwei vollständige Argumente – jeweils Behauptung, Begründung, Beispiel."),
+    MC(2,"Welcher Baustein fehlt? „Ein kostenloser ÖPNV ist sinnvoll. Zum Beispiel könnten Jugendliche dann allein zum Training fahren.“",["die Begründung","die Behauptung","das Beispiel","nichts"],"Warum ist es sinnvoll?","Es fehlt die Begründung, z. B.: …, weil auch Menschen mit wenig Geld mobil wären."),
+    TF(3,"Ein Beleg aus dem Material kann die Rolle des Beispiels übernehmen.",true,"Beides macht die Begründung konkret.","Richtig. In der materialgestützten Argumentation ist ein Materialbeleg oft der stärkste Beleg."),
+    FR(3,"Schreibe ein vollständiges Argument (Behauptung, Begründung, Beispiel) zum Thema Handyverbot an Schulen.","Ein komplettes Handyverbot an Schulen ist nicht sinnvoll, weil Jugendliche einen verantwortungsvollen Umgang mit dem Handy lernen müssen. So kann man im Unterricht zum Beispiel üben, seriöse Nachrichtenquellen zu erkennen.","weil … / zum Beispiel …")]),
+   KAP(4,"Gegenargumente entkräften","Ich kann ein Gegenargument aufgreifen und entkräften.","2026-11-20",[
+    GAP(1,"Wähle die passenden Wörter.","{0} lenken Handys im Unterricht ab, {1} mit klaren Regeln lässt sich das Problem lösen.",[["Zwar","Weil","Damit"],["doch","denn","weil"]],"Zugeständnis + Einwand.","„Zwar …, doch …“ ist eine typische Formulierung zum Entkräften."),
+    TF(1,"Wer ein Gegenargument aufgreift, wirkt glaubwürdiger.",true,"Man sieht, dass du die andere Seite kennst.","Richtig."),
+    MC(2,"Deine Position: kein komplettes Handyverbot. Gegenargument: „Handys lenken vom Unterricht ab.“ Welche Entkräftung überzeugt am meisten?",["Zwar können Handys ablenken, doch klare Regeln – etwa Handys im Unterricht in der Tasche – lösen dieses Problem, ohne die sinnvolle Nutzung zu verbieten.","Handys lenken nicht ab.","Lehrkräfte sind auch oft am Handy.","Das ist ein schlechtes Argument."],"Gib etwas zu und biete eine Lösung an.","Die erste Antwort nimmt das Argument ernst und entkräftet es mit einem Lösungsvorschlag."),
+    MA(2,"Ordne jeder Strategie den passenden Satz zu.",[["einschränken","Das trifft höchstens auf einen kleinen Teil der Schüler:innen zu."],["widerlegen","Die Umfrage in M3 zeigt jedoch das Gegenteil."],["Lösung anbieten","Dieses Problem lässt sich durch feste Handyzeiten lösen."],["gewichten","Selbst wenn das stimmt, überwiegen die Vorteile deutlich."]],"Widerlegen braucht einen Gegenbeleg.","So kannst du Gegenargumente unterschiedlich entkräften."),
+    MC(3,"Welche Entkräftung ist sachlich UND begründet?",["Es stimmt zwar, dass ein Gratis-Ticket Geld kostet. Dem ist jedoch entgegenzuhalten, dass dadurch Kosten für Straßen und Parkplätze sinken.","Wer das sagt, hat keine Ahnung.","Geld ist doch egal.","Dem ist nichts entgegenzuhalten."],"Zugeständnis + Gegenbegründung, ohne Angriff.","Nur die erste Antwort gibt etwas zu, bleibt sachlich und begründet."),
+    FR(3,"Thema: Soll der ÖPNV für Schüler:innen kostenlos sein? Schreibe ein Argument für deine Position und entkräfte ein Gegenargument.","Argument: Ein kostenloser ÖPNV für Schüler:innen ist sinnvoll, weil alle unabhängig vom Geldbeutel der Eltern mobil sind. So könnten zum Beispiel auch Jugendliche aus ärmeren Familien Ausbildungsplätze in der Nachbarstadt erreichen.\nEntkräftung: Zwar kostet das die Kommunen Geld, doch ein Teil davon wird gespart, weil weniger Eltern Fahrdienste mit dem Auto leisten und weniger Verkehr entsteht.","Behauptung – Begründung – Beispiel; dann „Zwar …, doch …“.")])]),
+  SEC("Mit Material arbeiten",[
+   KAP(5,"Argumente aus einem Sachtext herausarbeiten","Ich kann mithilfe der 3-Schritt-Lesemethode aus einem Sachtext Argumente herausarbeiten.","2026-11-24",SACHTEXT_OEPNV()),
+   KAP(6,"Richtig zitieren","Ich kann auf Material verweisen und richtig zitieren.","2026-11-26",[
+    TF(1,"Bei einem wörtlichen Zitat setzt du Anführungszeichen und nennst die Quelle.",true,"Zitat = wörtlich.","Richtig, z. B. „…“ (M2, Z. 5)."),
+    MC(1,"Was ist ein Verweis?",["Du gibst den Inhalt eines Materials sinngemäß wieder und nennst die Quelle.","Du übernimmst einen Satz wörtlich.","Du nennst nur deine eigene Meinung.","Du schreibst die Überschrift ab."],"Sinngemäß = mit eigenen Worten.","Ein Verweis gibt den Inhalt sinngemäß wieder, oft mit „vgl.“."),
+    MC(1,"Wofür steht „vgl.“ bei einer Quellenangabe?",["vergleiche","vorgelesen","vielleicht gelogen","vorgegeben"],"Man soll selbst nachsehen und vergleichen.","„vgl.“ = vergleiche. Man nutzt es bei sinngemäßer Wiedergabe."),
+    MC(1,"Wie kennzeichnest du eine Auslassung in einem Zitat?",["[…]","***","//","~"],"Eckige Klammern.","Mit […]."),
+    SO(2,"Zitat oder Verweis?",["Zitat","Verweis"],[["Laut M2 nutzen vor allem Jugendliche den Bus.",1],["In M1 heißt es: „Die Preise sind seit Jahren gestiegen“ (M1, Z. 3).",0],["Wie die Grafik in M3 zeigt, ist der Anteil der Autofahrten gesunken.",1],["„Ein Gratis-Ticket allein reicht nicht“ (M4, Z. 8).",0]],"Anführungszeichen?","Zitat = wörtlich in Anführungszeichen. Verweis = sinngemäß."),
+    MC(2,"Welche Formulierung leitet einen Verweis ein?",["Wie aus M2 hervorgeht, …","Meiner Meinung nach …","Abschließend …","Zweitens …"],"Ein Material muss genannt werden.","„Wie aus M2 hervorgeht“ verweist auf ein Material."),
+    OR(2,"Bringe die Bausteine eines Arguments mit Materialbeleg in eine sinnvolle Reihenfolge.",["Behauptung","Begründung","Beleg aus dem Material","Erläuterung und Rückbezug"],"Der Beleg stützt die Begründung, die Erläuterung verbindet ihn mit der Behauptung.","Behauptung – Begründung – Beleg – Erläuterung."),
+    MC(2,"Welcher Satz gibt M2 korrekt in indirekter Rede wieder?",["In M2 wird betont, dass der Bus oft zu spät komme.","In M2 wird betont, dass der Bus oft zu spät kommen würde gewesen.","In M2 wird betont: der Bus kommt zu spät.","M2 sagt, Bus spät."],"Indirekte Rede steht im Konjunktiv I.","„komme“ ist Konjunktiv I – so gibst du fremde Aussagen neutral wieder."),
+    MC(3,"Welcher Satz zitiert korrekt?",["Die Autorin betont, dass „ein Gratis-Ticket […] nicht reicht“ (M4, Z. 8).","Die Autorin betont, dass ein Gratis-Ticket nicht reicht.","Die Autorin betont: „Gratis-Tickets sind schlecht“ (M4, Z. 8).","„Gratis-Ticket […] reicht“"],"Anführungszeichen, gekennzeichnete Auslassung und Quelle.","Nur der erste Satz ist wörtlich, kennzeichnet die Auslassung und nennt die Quelle."),
+    TF(3,"Ein Zitat musst du erläutern und mit deiner Behauptung verbinden.",true,"Sonst steht es nur da.","Richtig. Erst die Erläuterung macht das Zitat zum Beleg."),
+    FR(3,"Material M2 (ausgedacht): „Seit dem Gratis-Ticket fahren an Schultagen rund ein Drittel mehr Jugendliche mit dem Bus.“ Formuliere daraus ein Argument mit Zitat.","Ein kostenloses Schülerticket stärkt den ÖPNV, weil es Jugendliche zum Umstieg bewegt. So heißt es in M2, dass „an Schultagen rund ein Drittel mehr Jugendliche mit dem Bus“ fahren (M2, Z. 1). Das zeigt, dass der Preis eine echte Hürde war und ein Gratis-Ticket das Verhalten tatsächlich verändert.","Behauptung – Begründung – Zitat mit Quelle – Erläuterung.")])]),
+  SEC("Richtig schreiben beim Argumentieren",[
+   KAP(7,"Kommasetzung in Satzgefügen","Ich kann Kommas in Satzgefügen korrekt setzen.","2026-11-27",[
+    TF(1,"Zwischen Hauptsatz und Nebensatz steht immer ein Komma.",true,"Satzgefüge.","Richtig. Haupt- und Nebensatz werden immer durch Komma getrennt."),
+    MC(1,"Wo fehlt das Komma? „Ich glaube dass der Vorschlag sinnvoll ist.“",["vor „dass“","nach „dass“","vor „sinnvoll“","nach „Ich“"],"Der Nebensatz beginnt mit „dass“.","Ich glaube, dass der Vorschlag sinnvoll ist."),
+    MK(1,"Tippe das Wort an, vor das ein Komma gehört.","Wir|fahren|mit|dem|Rad|*weil|der|Bus|ausfällt.","Wo beginnt der Nebensatz?","Wir fahren mit dem Rad, weil der Bus ausfällt."),
+    MC(1,"Welche Konjunktion leitet einen Nebensatz ein?",["obwohl","und","aber","denn"],"Nach ihr steht das finite Verb am Ende.","„obwohl“ ist unterordnend. und, aber, denn sind nebenordnend."),
+    MC(2,"Welcher Satz ist richtig?",["Der Vorschlag, den die SMV gemacht hat, ist gut.","Der Vorschlag den die SMV gemacht hat, ist gut.","Der Vorschlag, den die SMV gemacht hat ist gut.","Der Vorschlag den die SMV gemacht hat ist gut."],"Ein eingeschobener Nebensatz wird vorn und hinten abgetrennt.","Eingeschobene Nebensätze stehen zwischen zwei Kommas."),
+    MK(2,"Tippe alle Wörter an, vor die ein Komma gehört.","Als|der|Bus|endlich|kam|*waren|alle|froh|*weil|es|regnete.","Es sind zwei Kommas: nach dem Nebensatz am Anfang und vor dem Nebensatz am Ende.","Als der Bus endlich kam, waren alle froh, weil es regnete."),
+    TF(2,"Vor „und“ zwischen zwei Hauptsätzen muss ein Komma stehen.",false,"Hier hast du die Wahl.","Falsch. Das Komma ist hier freigestellt (man kann es setzen, muss aber nicht)."),
+    SO(2,"Satzreihe oder Satzgefüge?",["Satzreihe","Satzgefüge"],[["Die Schule plant einen Projekttag, aber der Termin steht noch nicht fest.",0],["Die SMV fordert, dass die Pausen länger werden.",1],["Wenn das Wetter mitspielt, findet das Sportfest draußen statt.",1],["Der Bus war voll, deshalb kam ich zu spät.",0]],"Gibt es einen Nebensatz mit Verb am Ende?","Satzgefüge = Hauptsatz + Nebensatz. Satzreihe = nur Hauptsätze."),
+    MK(3,"Tippe alle Wörter an, vor die ein Komma gehört.","Der|Schüler|*der|zu|spät|kam|*entschuldigte|sich.","Der Relativsatz ist eingeschoben.","Der Schüler, der zu spät kam, entschuldigte sich."),
+    MC(3,"Welcher Satz ist richtig?",["Obwohl die Mehrheit dafür war, wurde der Antrag, den die Klasse 10d gestellt hatte, abgelehnt.","Obwohl die Mehrheit dafür war wurde der Antrag, den die Klasse 10d gestellt hatte, abgelehnt.","Obwohl die Mehrheit dafür war, wurde der Antrag den die Klasse 10d gestellt hatte, abgelehnt.","Obwohl, die Mehrheit dafür war, wurde der Antrag, den die Klasse 10d gestellt hatte abgelehnt."],"Jeder Nebensatz wird vollständig abgetrennt.","Drei Kommas: nach dem Nebensatz vorn, vor und nach dem eingeschobenen Relativsatz."),
+    FR(3,"Verbinde zu einem Satz mit eingeschobenem Relativsatz: „Die Schulleitung hat die Pausenregel geändert. Die Regel galt seit Jahren.“","Die Schulleitung hat die Pausenregel, die seit Jahren galt, geändert.","Der Relativsatz steht direkt hinter „Pausenregel“ und wird von zwei Kommas eingeschlossen.")]),
+   KAP(8,"dass und das","Ich kann dass und das sicher unterscheiden.","2026-12-01")]),
+  SEC("Eine Argumentation schreiben",[
+   KAP(9,"Adressat, Textform und Anlass","Ich kann aus der Aufgabenstellung Textform, Adressat und Anlass bestimmen und meinen Text darauf ausrichten.","2026-12-04"),
+   KAP(10,"Aufbau einer Argumentation","Ich kenne den Aufbau einer materialgestützten Argumentation.","2026-12-08"),
+   KAP(11,"Eine Argumentation planen, schreiben und überarbeiten","Ich kann eine Argumentation planen, schreiben und überarbeiten.","2026-12-11"),
+   KAP(12,"Prüfungsaufgabe","Ich kann eine vollständige Prüfungsaufgabe bearbeiten.","2026-12-15")])]},
+  {id:"10d-a1",titel:"A1: Sachtexte und Sprachgebrauch",ziel:"Ich kann komplexe Texte verstehen, sprachliche Strukturen sicher anwenden und Grammatik, Zeichensetzung und Rechtschreibung korrekt nutzen.",prefix:"A1",past:"Klassenarbeit am 13.11. geschrieben",sections:[
+  SEC("Wortebene: Wortarten",[
+   KAP(7,"Wortarten","Ich kenne die verschiedenen Wortarten und kann Wörter ihrer Wortart zuordnen.","2026-11-10",[
+    SO(1,"Flektierbar oder nicht flektierbar?",["flektierbar","nicht flektierbar"],[["Haus",0],["laufen",0],["schön",0],["unter",1],["heute",1],["und",1],["ihr",0],["sehr",1]],"Flektierbar = das Wort kann seine Form ändern.","Nomen, Verben, Adjektive, Pronomen sind flektierbar. Präpositionen, Adverbien, Konjunktionen nicht."),
+    MC(1,"Welche Wortart ist „wegen“?",["Präposition","Adverb","Konjunktion","Adjektiv"],"„wegen des Regens“ – es fordert einen Kasus.","„wegen“ ist eine Präposition (mit Genitiv)."),
+    TF(1,"Adverbien kann man nicht deklinieren.",true,"heute, hier, sehr …","Richtig. Adverbien sind nicht flektierbar."),
+    MC(1,"Was wird konjugiert?",["Verben","Nomen","Präpositionen","Adverbien"],"ich gehe, du gehst …","Konjugieren = Verben nach Person, Zahl, Zeit usw. verändern."),
+    SO(2,"Ordne die Wörter zu.",["Nomen","Verb","Adjektiv","Pronomen","Präposition"],[["Freiheit",0],["diskutieren",1],["ehrlich",2],["sie",3],["trotz",4],["Lehrerin",0],["uns",3]],"Pronomen stehen für ein Nomen.","Nomen: Freiheit, Lehrerin. Verb: diskutieren. Adjektiv: ehrlich. Pronomen: sie, uns. Präposition: trotz."),
+    MC(2,"Welche Wortart sind „weil“, „dass“ und „obwohl“?",["Konjunktionen","Präpositionen","Adverbien","Pronomen"],"Sie leiten Nebensätze ein.","Unterordnende Konjunktionen (auch Subjunktionen genannt)."),
+    MC(2,"Was verändert sich bei der Deklination?",["Kasus, Numerus und Genus","Person und Zeit","nur die Großschreibung","gar nichts"],"der Hund, des Hundes, die Hunde …","Deklination: Kasus (Fall), Numerus (Zahl), Genus (Geschlecht)."),
+    MK(3,"Tippe alle Adverbien an.","*Heute|regnet|es|*sehr|stark.","„stark“ kann man steigern (stärker). Ist das ein Adverb?","„Heute“ und „sehr“ sind Adverbien. „stark“ ist ein Adjektiv (stark – stärker – am stärksten), auch wenn es hier das Verb näher beschreibt."),
+    MC(3,"„Das Lesen macht Spaß.“ Welche Wortart ist „Lesen“?",["Nomen (nominalisiertes Verb)","Verb","Adjektiv","Adverb"],"Achte auf den Artikel davor.","Mit Artikel wird das Verb zum Nomen: das Lesen."),
+    MC(3,"„Er kommt morgen.“ Welche Wortart ist „morgen“?",["Adverb","Nomen","Adjektiv","Präposition"],"Klein geschrieben, unveränderlich, sagt „wann“.","„morgen“ ist hier ein Adverb. Aber: „am Morgen“ – dann ist „Morgen“ ein Nomen."),
+    FR(3,"Erkläre den Unterschied zwischen flektierbaren und nicht flektierbaren Wortarten. Nenne je zwei Beispiele.","Flektierbare Wörter verändern ihre Form im Satz, z. B. Verben (gehen – ging) und Nomen (Haus – Häuser). Nicht flektierbare Wörter behalten immer dieselbe Form, z. B. Präpositionen (auf) und Adverbien (heute).","Verändert sich das Wort im Satz?")])])]}]}
+]}
+];
+
+/* ================= SPEICHER (nur auf diesem Gerät) ================= */
+const KEY="uebung-zell-v2";
+let st={pts:{},best:{},last:null,days:[],done:{},refl:{}};
+try{const raw=localStorage.getItem(KEY);if(raw){const o=JSON.parse(raw);if(o&&typeof o==="object")st=Object.assign(st,o)}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+
+/* ================= HILFEN ================= */
+const $=s=>document.querySelector(s);
+const app=$("#app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const ic=(n,cls)=>`<svg class="ic ${cls||""}" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const pad=n=>String(n).padStart(2,"0");
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const TODAY=iso(new Date());
+const dayDiff=(a,b)=>Math.round((new Date(b+"T12:00:00")-new Date(a+"T12:00:00"))/864e5);
+const WD=["So","Mo","Di","Mi","Do","Fr","Sa"];
+const fmt=s=>{const d=new Date(s+"T12:00:00");return `${WD[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`};
+const shuffle=a=>{const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+const shuffleNot=(a,same)=>{if(a.length<2)return a.slice();let b;let n=0;do{b=shuffle(a);n++}while(same(b)&&n<20);return b};
+const live=t=>{const l=$("#live");l.textContent="";setTimeout(()=>l.textContent=t,30)};
+const LV=["","Grundlagen","Üben","Knobeln"];
+const starsTxt=n=>"★".repeat(n);
+
+/* Struktur: Klasse → Fach → Einheit (wie Checkliste) → Abschnitt → Kapitel mit Übungen */
+for(const K of DATA)for(const F of K.faecher)for(const U of F.units)for(const S of U.sections)for(const C of S.kap){C.id=U.id+"-"+C.nr;C.U=U;C.F=F;C.K=K}
+const findK=k=>DATA.find(x=>x.id===k);
+const findF=(k,f)=>{const K=findK(k);return K&&K.faecher.find(x=>x.id===f)};
+const chapsOf=U=>U.sections.flatMap(S=>S.kap);
+function findC(id){for(const K of DATA)for(const F of K.faecher)for(const U of F.units)for(const C of chapsOf(U))if(C.id===id)return C;return null}
+function findU(id){for(const K of DATA)for(const F of K.faecher)for(const U of F.units)if(U.id===id)return {K,F,U};return null}
+const curUnit=F=>F.units.find(U=>!U.past)||F.units[0];
+const chapLabel=C=>`${C.U.prefix?C.U.prefix+" ":"Kapitel "}${C.nr}`;
+const chapStatus=d=>{const x=dayDiff(TODAY,d);return x<0?"behandelt":x===0?"heute":x<=7?"nächste Woche":"später"};
+function kaInfo(U){if(!U.ka||!U.ka.d)return null;const x=dayDiff(TODAY,U.ka.d);return {x,soon:x>=0&&x<=14,past:x<0}}
+const lvTasks=(C,lv)=>C.tasks.map((t,i)=>({t,i})).filter(o=>o.t.lv===lv);
+function lvStar(C,lv){const n=lvTasks(C,lv).length;if(!n)return false;const b=st.best[C.id+"-"+lv];return b!=null&&b>=Math.ceil(n*2*0.7)}
+const lvBest=(C,lv)=>st.best[C.id+"-"+lv];
+const chapDone=C=>C.tasks.length>0&&[1,2,3].every(l=>!lvTasks(C,l).length||lvBest(C,l)!=null);
+const chapStars=C=>[1,2,3].filter(l=>lvStar(C,l)).length;
+function chapProg(C){const p=st.pts[C.id]||{};return C.tasks.length?Object.keys(p).length/C.tasks.length:0}
+function unitProg(U){const cs=chapsOf(U).filter(C=>C.tasks.length);const t=cs.reduce((a,C)=>a+C.tasks.length,0);const d=cs.reduce((a,C)=>a+Object.keys(st.pts[C.id]||{}).length,0);return t?d/t:0}
+function streak(){const s=new Set(st.days);let d=new Date();if(!s.has(iso(d))){d.setDate(d.getDate()-1);if(!s.has(iso(d)))return 0}let n=0;while(s.has(iso(d))){n++;d.setDate(d.getDate()-1)}return n}
+function ring(frac,size){const r=16,c=2*Math.PI*r;return `<svg class="ring" width="${size||46}" height="${size||46}" viewBox="0 0 40 40" aria-hidden="true"><circle class="bgc" cx="20" cy="20" r="${r}"/><circle class="fgc" cx="20" cy="20" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-frac)}" transform="rotate(-90 20 20)"/></svg>`}
+
+/* ================= KARTEN-NUMMERN =================
+   Jede Karte hat eine 4-stellige Nummer. Sie entsteht auf dem Gerät des Kindes und enthält nichts über das Kind.
+   Herr Zell gibt sie im Lehrerbereich ein und sieht, ob sie schon einmal eingelöst wurde.
+   LEHRER_PIN vor dem Hochladen ändern. */
+const SECRET="zell-uebung-2026";
+const LEHRER_PIN="2611";
+const fnv=s=>{let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x};
+if(!st.salt){st.salt=Math.random().toString(36).slice(2,10);save()}
+const cardNo=(id,d)=>String(fnv(SECRET+"|"+st.salt+"|"+id+"|"+d)%9000+1000);
+function updateDone(){const fresh=[];for(const K of DATA)for(const F of K.faecher)for(const U of F.units){const cs=chapsOf(U);for(const C of cs)if(chapDone(C)&&!st.done[C.id]){st.done[C.id]=TODAY;fresh.push(C.id)}
+ const uid="u:"+U.id;if(cs.every(chapDone)&&!st.done[uid]){st.done[uid]=TODAY;fresh.push(uid)}}if(fresh.length)save();return fresh}
+function cardInfo(id){if(id.startsWith("u:")){const o=findU(id.slice(2));return o&&{K:o.K,F:o.F,title:"Ganze Einheit: "+o.U.titel,sub:""}}const C=findC(id);return C&&{K:C.K,F:C.F,C,title:chapLabel(C)+": "+C.titel,sub:C.U.titel}}
+function showCard(id,headline){const d=st.done[id];const c=cardInfo(id);if(!d||!c)return "";const dt=new Date(d+"T12:00:00");const col=id.startsWith("u:")?c.F.color:c.F.color;
+ return `<section class="prize" style="--a:${col}" aria-label="Abschlusskarte"><div class="ibox">${ic("medal")}</div><p class="small" style="font-weight:650;color:var(--A)">${esc(headline||"Geschafft!")}</p>
+ <h2 style="margin:4px 0 4px">${esc(c.title)}</h2><p class="small">${esc(c.K.name)} · ${esc(c.F.name)}${c.sub?" · "+esc(c.sub):""}</p>${c.C?`<p class="card-stars" aria-label="${chapStars(c.C)} von 3 Sternen">${[1,2,3].map(l=>`<svg class="ic ${l<=chapStars(c.C)?"on":""}" aria-hidden="true"><use href="#i-star"/></svg>`).join("")}</p>`:""}
+ <p class="small" style="margin-top:16px">Nummer</p><p class="code">${cardNo(id,d)}</p><p class="small">${WD[dt.getDay()]} ${pad(dt.getDate())}.${pad(dt.getMonth()+1)}.${dt.getFullYear()}</p>
+ <p class="howto"><strong>Mach einen Screenshot von dieser Karte und zeig ihn Herrn Zell.</strong> Beim ersten Einlösen gibt es ein Lob.</p></section>`}
+function cardModal(id){const m=$("#modal");m.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="Abschlusskarte"><div class="sheet">${showCard(id,"Geschafft!")}<div class="actions" style="justify-content:center"><button class="btn sec" id="mc">Schließen</button></div></div></div>`;
+ const close=()=>{m.innerHTML=""};$("#mc").onclick=close;m.querySelector(".modal").onclick=e=>{if(e.target.classList.contains("modal"))close()};m.querySelector(".modal").addEventListener("keydown",e=>{if(e.key==="Escape")close()});$("#mc").focus()}
+
+/* ================= VORLESEN ================= */
+const canSpeak="speechSynthesis" in window;
+let speakBtn=null;
+function speak(text,btn){if(!canSpeak)return;const ss=window.speechSynthesis;if(ss.speaking){ss.cancel();if(speakBtn===btn){btn.setAttribute("aria-pressed","false");speakBtn=null;return}}
+ const u=new SpeechSynthesisUtterance(text);u.lang="de-DE";u.rate=.95;const v=ss.getVoices().find(v=>/^de/i.test(v.lang));if(v)u.voice=v;
+ if(speakBtn)speakBtn.setAttribute("aria-pressed","false");speakBtn=btn;btn.setAttribute("aria-pressed","true");
+ u.onend=u.onerror=()=>{btn.setAttribute("aria-pressed","false");if(speakBtn===btn)speakBtn=null};ss.speak(u)}
+const stopSpeak=()=>{if(canSpeak)window.speechSynthesis.cancel()};
+
+
+/* ================= ANSICHTEN ================= */
+let lastDepth=0;
+function enter(depth){app.classList.remove("enter-f","enter-b");void app.offsetWidth;app.classList.add(depth>=lastDepth?"enter-f":"enter-b");lastDepth=depth}
+function setBar(backHash,label,narrow,onBack){const b=$("#bar");b.classList.toggle("narrow",!!narrow);app.classList.toggle("narrow",!!narrow);
+ b.firstElementChild.innerHTML=backHash!=null?`<a class="back" href="#${backHash}" id="barback">${ic("back")}<span>${esc(label)}</span></a>`:`<span class="brand">${esc(label)}</span>`;
+ if(onBack){const a=$("#barback");a.onclick=e=>{e.preventDefault();onBack()}}}
+function go(h){if(location.hash==="#"+h)render();else location.hash=h}
+const pbar=f=>`<div class="pbar" aria-hidden="true"><i style="width:${Math.round(f*100)}%"></i></div>`;
+const taskChaps=U=>chapsOf(U).filter(C=>C.tasks.length);
+
+function allEarned(){const out=[];for(const K of DATA)for(const F of K.faecher)for(const U of F.units){if(st.done["u:"+U.id])out.push({id:"u:"+U.id,t:"Ganze Einheit",s:U.titel,col:F.color,d:st.done["u:"+U.id],unit:true});for(const C of chapsOf(U))if(st.done[C.id])out.push({id:C.id,t:chapLabel(C)+": "+C.titel,s:K.name+" · "+F.name,col:F.color,d:st.done[C.id]})}return out.sort((a,b)=>a.d<b.d?1:-1)}
+const badgeBtn=(x,i)=>`<button class="tcard st badge-t" style="--a:${x.col};--i:${i}" data-card="${esc(x.id)}"><span class="ibox">${ic("medal")}</span><span><span class="t" style="display:block">${esc(x.t)}</span><span class="s" style="display:block">${esc(x.s)} · ${fmt(x.d)}</span></span></button>`;
+function albumTeaser(){const e=allEarned();const n=e.filter(x=>!x.unit).length;
+ return `<p class="h-sec">Meine Auszeichnungen</p><a class="wide tinted st" style="--a:#c86f2d" href="#album"><span class="ibox">${ic("medal")}</span><span class="grow"><span class="t" style="display:block">${n?`${n} ${n===1?"Auszeichnung":"Auszeichnungen"} gesammelt`:"Noch keine Auszeichnung"}</span><span class="s">${n?"Alle ansehen und vorzeigen":"Bearbeite alle Übungen eines Kapitels – dann bekommst du deine erste."}</span></span>${ic("next","chev")}</a>
+ ${e.length?`<div class="grid" style="margin-top:8px">${e.slice(0,4).map(badgeBtn).join("")}</div>`:""}`}
+function vAlbum(){setBar("start","Start");enter(1);app.style.setProperty("--a","#c86f2d");
+ const e=allEarned();const chaps=e.filter(x=>!x.unit).length;let stars=0,total=0;const blocks=[];
+ for(const K of DATA)for(const F of K.faecher){const cs=F.units.flatMap(taskChaps);total+=cs.length;cs.forEach(C=>stars+=chapStars(C));const active=cs.some(C=>st.pts[C.id]);if(!active)continue;
+  const units=[curUnit(F),...F.units.filter(U=>U!==curUnit(F))];
+  blocks.push(`<p class="h-sec" style="margin-top:32px;color:var(--ink)">${esc(K.name)} · ${esc(F.name)}</p>`+units.map(U=>{const us=taskChaps(U);if(!us.length)return "";return `<p class="h-sec" style="margin-top:12px">${esc(U.titel)} · ${us.filter(C=>st.done[C.id]).length} von ${us.length}</p><div class="grid">${us.map((C,i)=>st.done[C.id]?`<button class="tcard st badge-t" style="--a:${F.color};--i:${i}" data-card="${C.id}"><span class="ibox">${ic("medal")}</span>${chapStars(C)?`<span class="pill pillr">${ic("star")}${chapStars(C)}</span>`:""}<span><span class="t" style="display:block">${esc(chapLabel(C))}</span><span class="s" style="display:block">${esc(C.titel)} · ${fmt(st.done[C.id])}</span></span></button>`:`<a class="tcard st locked" style="--a:${F.color};--i:${i}" href="#c-${C.id}"><span class="ibox">${ic("lock")}</span><span><span class="t" style="display:block">${esc(chapLabel(C))}</span><span class="s" style="display:block">${esc(C.titel)} · noch offen</span></span></a>`).join("")}</div>`}).join(""))}
+ app.innerHTML=`<p class="eyebrow">Deine Sammlung</p><h1>Meine Auszeichnungen</h1><p class="sub">Für jedes Kapitel, in dem du alle Übungen bearbeitet hast, bekommst du eine Auszeichnung. Zeig sie Herrn Zell – beim ersten Einlösen gibt es ein Lob.</p>
+ <div class="tile tint st" style="margin-top:16px"><div class="stats"><div><p class="big">${chaps}</p><p class="small">${chaps===1?"Auszeichnung":"Auszeichnungen"}</p></div><div><p class="big">${stars}</p><p class="small">Sterne</p></div><div><p class="big">${e.filter(x=>x.unit).length}</p><p class="small">ganze Einheiten</p></div></div></div>
+ ${e.some(x=>x.unit)?`<p class="h-sec">Ganze Einheiten</p><div class="grid">${e.filter(x=>x.unit).map(badgeBtn).join("")}</div>`:""}
+ ${blocks.length?blocks.join(""):`<div class="tile sub" style="margin-top:16px">Hier sammeln sich deine Auszeichnungen. Fang einfach mit einem Kapitel an!</div>`}`;
+ app.querySelectorAll("[data-card]").forEach(b=>b.onclick=()=>cardModal(b.dataset.card))}
+
+function vHome(){setBar(null,"Übungsseite");enter(0);app.style.removeProperty("--a");const s=streak();const L=st.last?findC(st.last):null;
+ app.innerHTML=`<p class="eyebrow" style="color:var(--ink-2)">Herr Zell</p><h1>Üben</h1><p class="sub">Wähle deine Klasse und übe, was ihr gerade im Unterricht macht.</p>
+ <div class="tile note st" style="margin-top:16px">${ic("shield")}<div><p style="font-weight:600">Es wird nichts über dich gespeichert oder verschickt. Dein Fortschritt bleibt nur auf diesem Gerät.</p><button class="btn sec" id="del" style="margin-top:12px">${ic("trash")}Fortschritt auf diesem Gerät löschen</button></div></div>
+ ${L||s?`<div class="stack" style="margin-top:8px">
+ ${L?`<a class="wide tinted st" style="--a:${L.F.color};--i:1" href="#c-${L.id}"><span class="ibox">${ic("play")}</span><span class="grow"><span class="t" style="display:block">Weiter, wo du warst</span><span class="s">${esc(L.K.name)} · ${esc(chapLabel(L))}: ${esc(L.titel)}</span></span>${ic("next","chev")}</a>`:""}
+ ${s?`<div class="wide st" style="--a:#c86f2d;--i:2"><span class="ibox">${ic("flame")}</span><span class="grow"><span class="t" style="display:block">${s} ${s===1?"Tag":"Tage am Stück"} geübt</span><span class="s">Bleib dran!</span></span></div>`:""}</div>`:""}
+ <p class="h-sec">Klassen</p>
+ <div class="grid">${DATA.map((K,i)=>{const us=K.faecher.map(curUnit);const t=us.reduce((a,U)=>a+taskChaps(U).length,0),d=us.reduce((a,U)=>a+taskChaps(U).filter(chapDone).length,0);return `<a class="tcard st" style="--a:${K.color};--i:${i}" href="#k-${K.id}"><span class="ibox">${ic("class")}</span>${d?`<span class="pill pillr">${ic("star")}${d}/${t}</span>`:""}<span><span class="t" style="display:block">${esc(K.name)}</span><span class="s" style="display:block">${K.faecher.map(f=>esc(f.name)).join(", ")}</span></span></a>`}).join("")}</div>
+ ${albumTeaser()}`;
+ $("#del").onclick=askDelete;app.querySelectorAll("[data-card]").forEach(b=>b.onclick=()=>cardModal(b.dataset.card))}
+
+function vKlasse(k){const K=findK(k);if(!K)return vHome();setBar("start","Start");enter(1);app.style.setProperty("--a",K.color);
+ app.innerHTML=`<p class="eyebrow">${esc(K.name)}</p><h1>Deine Fächer</h1>
+ <div class="grid" style="margin-top:16px">${K.faecher.map((F,i)=>{const U=curUnit(F);const cs=taskChaps(U);const d=cs.filter(chapDone).length;return `<a class="tcard st" style="--a:${F.color};--i:${i}" href="#f-${K.id}-${F.id}"><span class="ibox">${ic(F.icon)}</span><span class="pill pillr">${ic("star")}${d}/${cs.length}</span><span><span class="t" style="display:block">${esc(F.name)}</span><span class="s" style="display:block;margin-bottom:8px">${esc(U.titel)}</span>${pbar(unitProg(U))}</span></a>`}).join("")}</div>`}
+
+const selLv={};
+function defaultLv(C){return selLv[C.id]||[1,2,3].find(l=>lvTasks(C,l).length&&!lvStar(C,l))||1}
+function lvInfo(C,lv){const n=lvTasks(C,lv).length;const b=lvBest(C,lv);const need=Math.ceil(n*2*0.7);
+ return lvStar(C,lv)?`Stern geschafft · bestes Ergebnis ${b} von ${n*2}`:`${n} ${n===1?"Aufgabe":"Aufgaben"} · Stern ab ${need} Punkten${b!=null?` · bisher ${b}`:""}`}
+const STATUS_CLS={"behandelt":"","heute":"now","nächste Woche":"acc-p","später":""};
+function chapTile(C,past,i){const s=chapStatus(C.d);const done=chapDone(C);const has=C.tasks.length>0;
+ if(!has)return `<article class="kap later st" style="--i:${i}" id="k-${C.id}"><div class="khead"><span class="check" aria-hidden="true"></span><div class="grow"><p class="knr">${esc(chapLabel(C))}</p><h3 class="ktitle">${esc(C.titel)}</h3><p class="small">Übungen kommen, sobald ihr im Unterricht hier seid.</p></div>${past?"":`<span class="pill">${s}</span>`}</div></article>`;
+ const lv=defaultLv(C);const started=[1,2,3].some(l=>lvBest(C,l)!=null);const r=st.refl[C.id];
+ return `<article class="kap st" style="--i:${i}" id="k-${C.id}"><div class="khead"><span class="check ${done?"on":""}" role="img" aria-label="${done?"Kapitel bearbeitet, Auszeichnung erhalten":"noch offen"}">${ic("check")}</span><div class="grow"><p class="knr">${esc(chapLabel(C))}</p><h3 class="ktitle">${esc(C.titel)}</h3><p class="goal">${ic("flag")}<span>${esc(C.ziel)}</span></p></div>${past?"":`<span class="pill ${STATUS_CLS[s]}">${s}</span>`}</div>
+ <div class="kbody"><p class="small" style="font-weight:600">${[1,2,3].filter(l=>lvTasks(C,l).length).length} Übungen · ${[1,2,3].filter(l=>lvTasks(C,l).length&&lvBest(C,l)!=null).length} bearbeitet · ${chapStars(C)} ${chapStars(C)===1?"Stern":"Sterne"}</p>
+ <div class="ex-list">${[1,2,3].filter(l=>lvTasks(C,l).length).map(l=>{const ok=lvStar(C,l);const n=lvTasks(C,l).length;const bst=lvBest(C,l);return `<button class="ex ${ok?"ok":""}" data-go="${C.id}" data-lv="${l}"><span class="ex-st" aria-hidden="true">${"★".repeat(l)}</span><span class="grow"><span class="ex-t">Übung ${l}: ${LV[l]}</span><span class="ex-s">${ok?`Stern geschafft · ${bst} von ${n*2} Punkten`:`${n} ${n===1?"Aufgabe":"Aufgaben"}${bst!=null?` · bisher ${bst} von ${n*2} Punkten`:""}`}</span></span>${ok?`<span class="ex-ok">${ic("check")}</span>`:`<span class="ex-go">${ic("next")}</span>`}</button>`}).join("")}</div>
+ ${started?`<div class="refl"><span class="small">Wie war das Kapitel für dich?</span><div class="seg" role="group" aria-label="Selbsteinschätzung">${["leicht","mittel","schwer"].map(v=>`<button data-refl="${C.id}" data-v="${v}" aria-pressed="${r===v}">${v}</button>`).join("")}</div></div>`:""}
+ ${done?`<div><button class="btn sec" data-card="${C.id}">${ic("medal")}Auszeichnung zeigen</button></div>`:`<p class="small">${ic("medal")} Bearbeite alle Übungen, dann bekommst du eine Auszeichnung.</p>`}</div></article>`}
+function unitHtml(U,past){let i=0;
+ const secs=U.sections.map(S=>{const ks=past?S.kap.filter(C=>C.tasks.length):S.kap;if(!ks.length)return "";return `<p class="h-sec">${esc(S.titel)}</p><div class="stack">${ks.map(C=>chapTile(C,past,i++)).join("")}</div>`}).join("");
+ return secs}
+function unitHead(U){const ka=kaInfo(U);const cs=taskChaps(U);const d=cs.filter(chapDone).length;
+ return `<div class="tile tint unit st" style="margin-top:16px"><p class="goal big">${ic("flag")}<span>${esc(U.ziel)}</span></p>
+ <div class="row small" style="margin-top:12px">${ic("cal")}<span>${esc(U.ka.txt)}: ${U.ka.d?`${fmt(U.ka.d)}${U.ka.geplant?" (geplant)":""}${ka&&!ka.past?` · in ${ka.x} ${ka.x===1?"Tag":"Tagen"}`:""}`:"Termin folgt"}</span>${ka&&ka.soon?`<span class="pill warn">Vorbereitung auf die ${esc(U.ka.txt)}</span>`:""}</div>
+ <div style="margin-top:16px">${pbar(unitProg(U))}<p class="small" style="margin-top:8px">${d} von ${cs.length} Kapiteln bearbeitet · ${cs.reduce((a,C)=>a+chapStars(C),0)} Sterne</p></div>
+ ${st.done["u:"+U.id]?`<div style="margin-top:16px">${showCard("u:"+U.id,"Ganze Einheit geschafft!")}</div>`:""}</div>`}
+function vFach(k,f,focus){const K=findK(k),F=findF(k,f);if(!F)return vKlasse(k);const U=curUnit(F);const pasts=F.units.filter(x=>x!==U);
+ setBar("k-"+K.id,K.name,true);enter(2);app.style.setProperty("--a",F.color);
+ app.innerHTML=`<p class="eyebrow">${esc(K.name)} · ${esc(F.name)}</p><h1>${esc(U.titel)}</h1>${unitHead(U)}${unitHtml(U,false)}
+ ${pasts.length?`<p class="h-sec" style="margin-top:32px">Wiederholung</p><div class="stack">${pasts.map(P=>{const cs=taskChaps(P);return `<details class="past" ${focus&&focus.U===P?"open":""}><summary><span class="ibox">${ic("redo")}</span><span><span style="display:block">${esc(P.titel)}</span><span class="small" style="font-weight:400">${esc(P.past)} · ${cs.filter(chapDone).length}/${cs.length} geschafft</span></span>${ic("next","chev")}</summary><div class="pinner">${unitHtml(P,true)}</div></details>`}).join("")}</div>`:""}`;
+ app.querySelectorAll("[data-sel]").forEach(b=>b.onclick=()=>{const C=findC(b.dataset.sel);const lv=+b.dataset.lv;selLv[C.id]=lv;b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));app.querySelector(`[data-lvname="${C.id}"]`).textContent=LV[lv];app.querySelector(`[data-lvinfo="${C.id}"]`).textContent=lvInfo(C,lv)});
+ app.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>startLevel(findC(b.dataset.go),+b.dataset.lv));
+ app.querySelectorAll("[data-refl]").forEach(b=>b.onclick=()=>{st.refl[b.dataset.refl]=b.dataset.v;save();b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"))});
+ app.querySelectorAll("[data-card]").forEach(b=>b.onclick=()=>cardModal(b.dataset.card));
+ if(focus){const el=document.getElementById("k-"+focus.id);if(el){if(el.scrollIntoView)el.scrollIntoView({block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),1200)}}}
+
+/* ================= AUFGABEN ================= */
+let R=null;
+function startLevel(C,lv){st.last=C.id;selLv[C.id]=lv;save();R={C,lv,list:lvTasks(C,lv),i:0,pts:[]};renderTask();window.scrollTo(0,0)}
+function speakText(t){const parts=[t.q];if(t.t==="mc")parts.push("Antworten: "+t.opts.join(". "));if(t.t==="mark")parts.push(t.s.split("|").map(w=>w.replace(/^\*/,"")).join(" "));if(t.t==="gap")parts.push(t.s.replace(/\{\d\}/g," Lücke "));if(t.t==="sort")parts.push(t.items.map(x=>x[0]).join(". "));if(t.t==="match")parts.push(t.pairs.map(p=>p[0]).join(". "));return parts.join(". ")}
+function renderTask(){stopSpeak();const {C,lv,list,i}=R;const {t}=list[i];R.tries=0;R.done=false;
+ setBar("c-"+C.id,"Zur Checkliste",true,()=>{stopSpeak();go("c-"+C.id)});enter(3);
+ app.innerHTML=`<p class="eyebrow">${esc(chapLabel(C))}: ${esc(C.titel)}</p>
+ <div class="tprog"><span class="small" style="font-weight:600;white-space:nowrap">${starsTxt(lv)} ${LV[lv]}</span><div class="pbar" role="progressbar" aria-label="Fortschritt" aria-valuemin="0" aria-valuemax="${list.length}" aria-valuenow="${i}"><i style="width:${i/list.length*100}%"></i></div><span class="small" style="white-space:nowrap">${i+1} von ${list.length}</span></div>
+ <section class="qtile" aria-labelledby="qq"><div class="qhead"><p class="q" id="qq">${esc(t.q)}</p>${canSpeak?`<button class="speak" id="spk" aria-pressed="false" aria-label="Aufgabe vorlesen">${ic("speak")}</button>`:""}</div><div id="body"></div><div id="fb" aria-live="polite"></div><div class="actions" id="act"></div></section>`;
+ if(canSpeak)$("#spk").onclick=e=>speak(speakText(t),e.currentTarget);
+ ({mc:tMC,tf:tTF,gap:tGap,match:tMatch,sort:tSort,order:tOrder,mark:tMark,free:tFree})[t.t](t);
+ $("#qq").setAttribute("tabindex","-1");$("#qq").focus({preventScroll:true})}
+function fb(kind,html){const ico=kind==="tip"?"bulb":kind==="ok"?"check":kind==="bad"?"x":"bulb";$("#fb").innerHTML=`<div class="fb ${kind}">${ic(ico)}<div>${html}</div></div>`}
+function setActions(html){$("#act").innerHTML=html}
+function checkBtn(fn){setActions(`<button class="btn" id="chk">Prüfen</button>`);$("#chk").onclick=fn}
+/* Ergebnis einer Aufgabe: ok=true richtig; sonst Fehlversuch. Gibt "solve" zurück, wenn die Lösung gezeigt werden soll */
+function attempt(ok,t){if(ok){finish(R.tries===0?2:1,`<p><strong>${R.tries===0?"Richtig!":"Jetzt stimmt’s!"}</strong> ${esc(t.ex||"")}</p>`,"ok");return "ok"}
+ R.tries++;if(R.tries===1){fb("tip",`<p><strong>Noch nicht ganz.</strong> Tipp: ${esc(t.tip||"Lies die Aufgabe noch einmal genau.")}</p>`);live("Noch nicht ganz. Tipp angezeigt.");return "tip"}
+ finish(0,`<p><strong>Hier ist die Lösung.</strong> ${esc(t.ex||"")}</p>`,"bad");return "solve"}
+function finish(p,html,kind){R.done=true;R.pts[R.i]=p;const id=R.C.id,idx=R.list[R.i].i;st.pts[id]=st.pts[id]||{};st.pts[id][idx]=p;if(!st.days.includes(TODAY)){st.days.push(TODAY);st.days=st.days.slice(-60)}save();
+ fb(kind,html);live(kind==="ok"?"Richtig.":"Lösung angezeigt.");const last=R.i===R.list.length-1;setActions(`<button class="btn" id="nx">${last?"Ergebnis ansehen":"Weiter"}${ic("next")}</button>`);$("#nx").onclick=()=>{if(last)showResult();else{R.i++;renderTask()}};$("#nx").focus()}
+
+function optButtons(opts,cls){return opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o)}</button>`).join("")}
+function tMC(t){const order=shuffle(t.opts.map((o,k)=>k));$("#body").innerHTML=order.map(k=>`<button class="opt" data-k="${k}">${esc(t.opts[k])}</button>`).join("");
+ $("#body").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(R.done)return;const k=+b.dataset.k;if(k===0){b.classList.add("good");disableAll();attempt(true,t)}else{b.classList.add("bad");b.disabled=true;const r=attempt(false,t);if(r==="solve"){$("#body").querySelector('[data-k="0"]').classList.add("good");disableAll()}}})}
+function disableAll(){$("#body").querySelectorAll("button,select").forEach(b=>b.disabled=true)}
+function tTF(t){$("#body").innerHTML=`<div class="tf"><button class="opt" data-v="1">Richtig</button><button class="opt" data-v="0">Falsch</button></div>`;
+ $("#body").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{if(R.done)return;const v=b.dataset.v==="1";if(v===t.a){b.classList.add("good");disableAll();attempt(true,t)}else{b.classList.add("bad");b.disabled=true;const r=attempt(false,t);if(r==="solve"){$("#body").querySelector(`[data-v="${t.a?1:0}"]`).classList.add("good");disableAll()}}})}
+function tGap(t){let html=esc(t.s);t.g.forEach((opts,gi)=>{const sel=`<select data-g="${gi}" aria-label="Lücke ${gi+1}"><option value="">– wählen –</option>${shuffle(opts.map((o,k)=>k)).map(k=>`<option value="${k}">${esc(opts[k])}</option>`).join("")}</select>`;html=html.replace(`{${gi}}`,sel)});
+ $("#body").innerHTML=`<p class="gapt">${html}</p>`;const sels=[...$("#body").querySelectorAll("select")];sels.forEach(s=>s.onchange=()=>s.classList.remove("good","bad"));
+ checkBtn(()=>{if(sels.some(s=>s.value==="")){fb("info","<p>Wähle zuerst in jeder Lücke ein Wort aus.</p>");return}let all=true;sels.forEach(s=>{const ok=s.value==="0";s.classList.toggle("good",ok);s.classList.toggle("bad",!ok);if(!ok)all=false});
+  const r=attempt(all,t);if(r==="ok"||r==="solve"){sels.forEach(s=>{s.value="0";s.classList.remove("bad");s.classList.add("good");s.disabled=true})}})}
+function tMatch(t){const L=t.pairs.map((p,k)=>k);const Rr=shuffleNot(L,b=>b.every((v,i)=>v===i));const pair={};let act=null;const locked=new Set();
+ const draw=()=>{const num=k=>{const ks=Object.keys(pair).map(Number).sort((a,b)=>a-b);return ks.indexOf(k)+1};
+  $("#body").innerHTML=`<p class="small" style="margin-top:-4px">Tippe links einen Begriff an, dann rechts die passende Erklärung.</p><div class="match"><div>${L.map(k=>`<button class="chip ${pair[k]!=null?"paired":""} ${locked.has(k)?"good":""}" data-l="${k}" aria-pressed="${act===k}">${pair[k]!=null?`<span class="n">${num(k)}</span>`:""}<span>${esc(t.pairs[k][0])}</span></button>`).join("")}</div><div>${Rr.map(r=>{const lk=Object.keys(pair).find(k=>pair[k]===r);return `<button class="chip ${lk!=null?"paired":""} ${lk!=null&&locked.has(+lk)?"good":""}" data-r="${r}">${lk!=null?`<span class="n">${num(+lk)}</span>`:""}<span>${esc(t.pairs[r][1])}</span></button>`}).join("")}</div></div>`;
+  $("#body").querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{if(R.done)return;const k=+b.dataset.l;if(locked.has(k))return;if(pair[k]!=null){delete pair[k];act=k}else act=act===k?null:k;draw();const nb=$(`#body [data-l="${k}"]`);if(nb)nb.focus()});
+  $("#body").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{if(R.done)return;const r=+b.dataset.r;const lk=Object.keys(pair).find(k=>pair[k]===r);if(lk!=null){if(locked.has(+lk))return;delete pair[lk]}if(act==null){fb("info","<p>Tippe zuerst links einen Begriff an.</p>");draw();return}pair[act]=r;act=null;draw();const nb=$(`#body [data-r="${r}"]`);if(nb)nb.focus()});
+  if(R.done)disableAll()};
+ draw();checkBtn(()=>{if(Object.keys(pair).length<L.length){fb("info","<p>Verbinde zuerst alle Paare.</p>");return}const wrong=L.filter(k=>pair[k]!==k);L.forEach(k=>{if(pair[k]===k)locked.add(k)});
+  if(!wrong.length){draw();attempt(true,t);return}wrong.forEach(k=>delete pair[k]);const r=attempt(false,t);if(r==="solve"){L.forEach(k=>{pair[k]=k;locked.add(k)})}draw()})}
+function tSort(t){const order=shuffle(t.items.map((x,k)=>k));const ch={};
+ $("#body").innerHTML=order.map(k=>`<div class="srow" data-row="${k}"><div>${esc(t.items[k][0])}</div><div class="seg" role="group" aria-label="Kategorie wählen">${t.cats.map((c,ci)=>`<button data-k="${k}" data-c="${ci}" aria-pressed="false">${esc(c)}</button>`).join("")}</div></div>`).join("");
+ $("#body").querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{if(R.done)return;const k=+b.dataset.k;ch[k]=+b.dataset.c;b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));b.closest(".srow").classList.remove("bad")});
+ checkBtn(()=>{if(Object.keys(ch).length<t.items.length){fb("info","<p>Ordne zuerst alle Kärtchen zu.</p>");return}let all=true;t.items.forEach((x,k)=>{const row=$(`#body [data-row="${k}"]`);const ok=ch[k]===x[1];row.classList.toggle("good",ok);row.classList.toggle("bad",!ok);if(!ok)all=false});
+  const r=attempt(all,t);if(r==="solve"){t.items.forEach((x,k)=>{const row=$(`#body [data-row="${k}"]`);row.classList.remove("bad");row.classList.add("good");row.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.c===x[1]?"true":"false"))})}if(r!=="tip")disableAll()})}
+function tOrder(t){const idx=t.items.map((x,k)=>k);let pool=shuffleNot(idx,b=>b.every((v,i)=>v===i));let ans=[];let marks=null;
+ const draw=()=>{$("#body").innerHTML=`<p class="small" style="margin-top:-4px">Tippe die Teile der Reihe nach an. Antippen in der Antwort nimmt einen Teil wieder heraus.</p><div class="ans" aria-label="Deine Reihenfolge">${ans.length?ans.map((k,p)=>`<button class="ochip ${marks?(marks[p]?"good":"bad"):""}" data-a="${p}">${p+1}. ${esc(t.items[k])}</button>`).join(""):`<span class="ph">Noch leer</span>`}</div><div class="pool">${pool.map(k=>`<button class="ochip" data-p="${k}">${esc(t.items[k])}</button>`).join("")}</div>`;
+  $("#body").querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{if(R.done)return;const k=+b.dataset.p;pool=pool.filter(x=>x!==k);ans.push(k);marks=null;draw();const nb=$("#body [data-p]")||$("#chk");if(nb)nb.focus()});
+  $("#body").querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{if(R.done)return;const p=+b.dataset.a;pool.push(ans[p]);ans.splice(p,1);marks=null;draw()});
+  if(R.done)disableAll()};
+ draw();checkBtn(()=>{if(pool.length){fb("info","<p>Ordne zuerst alle Teile ein.</p>");return}marks=ans.map((k,p)=>k===p);const all=marks.every(Boolean);const r=attempt(all,t);if(r==="solve"){ans=idx.slice();marks=ans.map(()=>true)}draw()})}
+function tMark(t){const toks=t.s.split("|").map(w=>({w:w.replace(/^\*/,""),c:w.startsWith("*")}));const sel=new Set();
+ $("#body").innerHTML=`<p class="sent">${toks.map((x,k)=>`<button class="tok" data-k="${k}" aria-pressed="false">${esc(x.w)}</button>`).join(" ")}</p>`;
+ $("#body").querySelectorAll(".tok").forEach(b=>b.onclick=()=>{if(R.done)return;const k=+b.dataset.k;sel.has(k)?sel.delete(k):sel.add(k);b.setAttribute("aria-pressed",sel.has(k)?"true":"false");b.classList.remove("bad")});
+ checkBtn(()=>{if(!sel.size){fb("info","<p>Tippe zuerst mindestens ein Wort an.</p>");return}const ok=toks.every((x,k)=>x.c===sel.has(k));const r=attempt(ok,t);
+  if(r==="ok"||r==="solve"){$("#body").querySelectorAll(".tok").forEach(b=>{const k=+b.dataset.k;b.setAttribute("aria-pressed","false");if(toks[k].c)b.classList.add("good");else if(sel.has(k))b.classList.add("bad")});disableAll()}})}
+function tFree(t){$("#body").innerHTML=`<label class="sr" for="ta">Deine Antwort</label><textarea id="ta" placeholder="Schreibe hier deine Antwort …"></textarea><p class="small" style="margin:8px 0 0">Deine Antwort bleibt nur hier auf dem Bildschirm. Sie wird nicht gespeichert.</p>`;
+ setActions(`<button class="btn sec" id="tp">${ic("bulb")}Tipp</button><button class="btn" id="ml">Mit Musterlösung vergleichen</button>`);
+ $("#tp").onclick=()=>fb("tip",`<p>Tipp: ${esc(t.tip||"")}</p>`);
+ $("#ml").onclick=()=>{const v=$("#ta").value.trim();if(v.length<10){fb("info","<p>Schreibe zuerst eine eigene Antwort – mindestens einen Satz.</p>");return}
+  $("#ta").readOnly=true;fb("info",`<p><strong>Musterlösung</strong></p><p class="model">${esc(t.model)}</p><p style="margin-top:10px"><strong>Vergleiche ehrlich: Wie nah warst du dran?</strong></p>`);
+  setActions(`<button class="btn" data-s="2">${ic("check")}Passt</button><button class="btn sec" data-s="1">Teilweise</button><button class="btn sec" data-s="0">Noch nicht</button>`);
+  $("#act").querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{const p=+b.dataset.s;R.done=true;R.pts[R.i]=p;const id=R.C.id,idx=R.list[R.i].i;st.pts[id]=st.pts[id]||{};st.pts[id][idx]=p;if(!st.days.includes(TODAY))st.days.push(TODAY);save();
+   const last=R.i===R.list.length-1;setActions(`<button class="btn" id="nx">${last?"Ergebnis ansehen":"Weiter"}${ic("next")}</button>`);$("#nx").onclick=()=>{if(last)showResult();else{R.i++;renderTask()}};$("#nx").focus()})};}
+
+
+/* ================= ERGEBNIS ================= */
+function showResult(){stopSpeak();const {C,lv,list}=R;const sum=R.pts.reduce((a,b)=>a+(b||0),0),max=list.length*2;const key=C.id+"-"+lv;if(st.best[key]==null||sum>st.best[key])st.best[key]=sum;save();const fresh=updateDone();const unitFresh=fresh.find(x=>x.startsWith("u:"));
+ const star=lvStar(C,lv);const now=new Date();const dt=`${pad(now.getDate())}.${pad(now.getMonth()+1)}.${now.getFullYear()}`;
+ const nextLv=[lv+1,lv+2].find(l=>l<=3&&lvTasks(C,l).length);
+ const r=34,c=2*Math.PI*r,frac=max?sum/max:0;
+ setBar("c-"+C.id,"Zur Checkliste",true);enter(4);
+ app.innerHTML=`<p class="eyebrow">${esc(chapLabel(C))} · ${starsTxt(lv)} ${LV[lv]}</p>
+ <section class="tile result" aria-labelledby="rh">
+ <svg class="done-ring" width="96" height="96" viewBox="0 0 80 80" aria-hidden="true"><circle class="bg" cx="40" cy="40" r="${r}"/><circle class="fg" cx="40" cy="40" r="${r}" style="--c:${c}" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-frac)}"/>${star?`<path class="ck" d="M27 41l9 9 17-18"/>`:""}</svg>
+ <h1 id="rh" style="margin:0">${sum===max?"Alles richtig!":star?"Stufe geschafft!":"Gut geübt!"}</h1>
+ <p class="big" style="margin-top:8px">${sum} / ${max}</p><p class="small">Punkte</p>
+ <dl class="rgrid"><dt>Klasse</dt><dd>${esc(C.K.name)} · ${esc(C.F.name)}</dd><dt>Kapitel</dt><dd>${esc(chapLabel(C))}: ${esc(C.titel)}</dd><dt>Stufe</dt><dd>${starsTxt(lv)} ${LV[lv]}</dd><dt>Datum</dt><dd>${dt}</dd></dl>
+ ${star?"":`<p class="small" style="margin-top:16px">Ab ${Math.ceil(max*0.7)} Punkten bekommst du den Stern für diese Stufe.</p>`}</section>
+ ${fresh.includes(C.id)?`<div style="margin-top:12px">${showCard(C.id,"Neue Auszeichnung!")}</div>`:""}
+ ${unitFresh?`<div style="margin-top:12px">${showCard(unitFresh,"Ganze Einheit geschafft")}</div>`:""}
+ <div class="actions">${nextLv?`<button class="btn" id="nl">Weiter mit ${starsTxt(nextLv)} ${LV[nextLv]}${ic("next")}</button>`:""}<button class="btn sec" id="ag">${ic("redo")}Nochmal</button><a class="btn sec" href="#c-${C.id}">Zur Checkliste</a>${fresh.length?`<a class="btn sec" href="#album">${ic("medal")}Meine Auszeichnungen</a>`:""}</div>`;
+ if($("#nl"))$("#nl").onclick=()=>startLevel(C,nextLv);$("#ag").onclick=()=>startLevel(C,lv);
+ $("#rh").setAttribute("tabindex","-1");$("#rh").focus({preventScroll:true});window.scrollTo(0,0)}
+
+/* ================= LÖSCHEN ================= */
+function askDelete(){const m=$("#modal");m.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mh"><div class="sheet"><h2 id="mh" style="margin-top:0">Fortschritt löschen?</h2><p>Alle Punkte, Sterne, Abzeichen und deine Serie auf diesem Gerät werden gelöscht. Danach kannst du neu anfangen.</p><div class="actions"><button class="btn" id="my">${ic("trash")}Ja, löschen</button><button class="btn sec" id="mn">Abbrechen</button></div></div></div>`;
+ $("#mn").onclick=()=>{m.innerHTML="";$("#del").focus()};$("#my").onclick=()=>{st={pts:{},best:{},last:null,days:[],done:{},refl:{},salt:Math.random().toString(36).slice(2,10)};try{localStorage.removeItem(KEY)}catch(e){}save();m.innerHTML="";render();live("Fortschritt gelöscht.")};
+ m.querySelector(".modal").addEventListener("keydown",e=>{if(e.key==="Escape")$("#mn").click()});$("#mn").focus()}
+
+/* ================= LEHRKRAFT =================
+   Eingelöste Nummern werden nur auf dem Gerät der Lehrkraft gespeichert. */
+const TKEY="uebung-zell-lehrer-v1";
+let used=[];try{used=JSON.parse(localStorage.getItem(TKEY)||"[]")||[]}catch(e){used=[]}
+const saveUsed=()=>{try{localStorage.setItem(TKEY,JSON.stringify(used))}catch(e){}};
+let teacherOk=false;
+function vLehrer(){if(!teacherOk){setBar("start","Start",true);enter(1);app.style.removeProperty("--a");app.innerHTML=`<p class="eyebrow" style="color:var(--ink-2)">Nur für Herrn Zell</p><h1>Lehrkraft</h1><div class="tile" style="margin-top:16px"><form id="pf" class="row"><label for="pin">PIN</label><input type="password" id="pin" inputmode="numeric" autocomplete="off"><button class="btn" type="submit">Weiter</button></form><div id="pfb" aria-live="polite"></div></div>`;
+  $("#pf").onsubmit=e=>{e.preventDefault();if($("#pin").value===LEHRER_PIN){teacherOk=true;vLehrer()}else $("#pfb").innerHTML=`<div class="fb bad">${ic("x")}<p>PIN falsch.</p></div>`};$("#pin").focus();return}
+ setBar("start","Start",true);app.innerHTML=`<p class="eyebrow" style="color:var(--ink-2)">Lehrkraft</p><h1>Karte einlösen</h1><p class="small">Gib die 4-stellige Nummer von der Karte ein. Eingelöste Nummern merkt sich nur dieses Gerät.</p>
+ <div class="tile" style="margin-top:16px"><form id="cf" class="row"><label class="sr" for="cc">Nummer</label><input type="text" id="cc" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="0000" style="max-width:140px;font-size:22px;letter-spacing:.1em;font-variant-numeric:tabular-nums"><button class="btn" type="submit">Einlösen</button></form><div id="cfb" aria-live="polite"></div></div>
+ <p class="h-sec">Zuletzt eingelöst (${used.length})</p>${used.length?`<div class="stack">${used.slice().reverse().slice(0,30).map(u=>`<div class="used"><strong>${esc(u.c)}</strong><span class="small">${fmt(u.d)} ${u.d.slice(0,4)}</span></div>`).join("")}</div><div class="actions"><button class="btn sec" id="clr">${ic("trash")}Liste löschen</button></div>`:`<p class="small">Noch keine.</p>`}`;
+ const inp=$("#cc");inp.focus();
+ $("#cf").onsubmit=e=>{e.preventDefault();const c=inp.value.replace(/\D/g,"");const o=$("#cfb");
+  if(!/^[1-9]\d{3}$/.test(c)){o.innerHTML=`<div class="fb bad">${ic("x")}<p>Bitte eine 4-stellige Nummer eingeben.</p></div>`;return}
+  const u=used.find(x=>x.c===c);
+  if(u){o.innerHTML=`<div class="fb bad">${ic("x")}<p><strong>Schon eingelöst</strong> am ${fmt(u.d)} ${u.d.slice(0,4)}. Kein neues Lob.</p></div>`;return}
+  used.push({c,d:TODAY});saveUsed();vLehrer();$("#cfb").innerHTML=`<div class="fb ok">${ic("check")}<p><strong>Neu – ${esc(c)} ist jetzt eingelöst.</strong> Lob in Untis eintragen.</p><button class="btn sec" id="undo" style="margin-left:auto">Rückgängig</button></div>`;
+  $("#undo").onclick=()=>{used=used.filter(x=>x.c!==c);saveUsed();vLehrer()}};
+ if($("#clr"))$("#clr").onclick=()=>{const m=$("#modal");m.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mh2"><div class="sheet"><h2 id="mh2" style="margin-top:0">Liste löschen?</h2><p>Danach werden alte Nummern wieder als neu erkannt.</p><div class="actions"><button class="btn" id="my2">Ja, löschen</button><button class="btn sec" id="mn2">Abbrechen</button></div></div></div>`;
+  $("#mn2").onclick=()=>m.innerHTML="";$("#my2").onclick=()=>{used=[];saveUsed();m.innerHTML="";vLehrer()};$("#mn2").focus()}}
+
+/* ================= ROUTER ================= */
+function render(){stopSpeak();R=null;const h=location.hash.slice(1);let m;let focus=null;
+ if((m=h.match(/^k-(\w+)$/)))vKlasse(m[1]);
+ else if((m=h.match(/^f-(\w+)-(\w+)$/)))vFach(m[1],m[2]);
+ else if((m=h.match(/^c-([\w-]+)$/))&&(focus=findC(m[1]))){const C=focus;window.scrollTo(0,0);vFach(C.K.id,C.F.id,C);return}
+ else if(h==="lehrer")vLehrer();
+ else if(h==="album")vAlbum();
+ else vHome();
+ window.scrollTo(0,0)}
+window.addEventListener("hashchange",render);
+render();
+}
+</script>
+</body>
+</html>
