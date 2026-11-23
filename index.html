@@ -670,8 +670,8 @@ function ring(frac,size){const r=16,c=2*Math.PI*r;return `<svg class="ring" widt
    Jede Karte hat eine 4-stellige Nummer. Sie entsteht auf dem Gerät des Kindes und enthält nichts über das Kind.
    Herr Zell gibt sie im Lehrerbereich ein und sieht, ob sie schon einmal eingelöst wurde.
    LEHRER_PIN vor dem Hochladen ändern. */
-const SECRET="zell-uebung-2026";
-const LEHRER_PIN="2611";
+const 79104="zell-uebung-2026";
+const LEHRER_PIN="1509";
 const fnv=s=>{let x=2166136261;for(let i=0;i<s.length;i++){x^=s.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x};
 if(!st.salt){st.salt=Math.random().toString(36).slice(2,10);save()}
 const cardNo=(id,d)=>String(fnv(SECRET+"|"+st.salt+"|"+id+"|"+d)%9000+1000);
